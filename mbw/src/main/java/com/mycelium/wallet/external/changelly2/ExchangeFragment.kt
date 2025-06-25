@@ -23,7 +23,6 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.mrd.bitlib.model.BitcoinAddress
 import com.mycelium.view.RingDrawable
-import com.mycelium.wallet.BuildConfig
 import com.mycelium.wallet.MbwManager
 import com.mycelium.wallet.R
 import com.mycelium.wallet.Utils
@@ -348,7 +347,7 @@ class ExchangeFragment : Fragment(), BackListener {
                 if (result != null) {
                     withContext(Dispatchers.Default) {
                         val addressTo =
-                            if (BuildConfig.FLAVOR == "btctestnet") viewModel.fromAddress.value!!
+                            if (!Utils.isProdnet()) viewModel.fromAddress.value!!
                             else result.payinAddress!!
                         val amount = result.amountExpectedFrom.toPlainString()
                         val unsignedTx = prepareTx(addressTo, amount)

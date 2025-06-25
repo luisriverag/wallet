@@ -212,17 +212,17 @@ public class VerifyBackupActivity extends AppCompatActivity {
          }
       }
 
-      for (ColuMain coluAsset : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
-         UUID coluUUID = ColuUtils.getGuidForAsset(coluAsset, pk.getPublicKey().toAddress(_mbwManager.getNetwork(), AddressType.P2PKH).getAllAddressBytes());
-         success |= _mbwManager.getWalletManager(false).hasAccount(coluUUID);
-      }
+//      for (ColuMain coluAsset : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
+//         UUID coluUUID = ColuUtils.getGuidForAsset(coluAsset, pk.getPublicKey().toAddress(_mbwManager.getNetwork(), AddressType.P2PKH).getAllAddressBytes());
+//         success |= _mbwManager.getWalletManager(false).hasAccount(coluUUID);
+//      }
 
       if (success && allAddresses != null) {
          _mbwManager.getMetadataStorage().setOtherAccountBackupState(account, MetadataStorage.BackupState.VERIFIED);
-         for (ColuMain coluAsset : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
-            UUID coluUUID = ColuUtils.getGuidForAsset(coluAsset, pk.getPublicKey().toAddress(_mbwManager.getNetwork(), AddressType.P2PKH).getAllAddressBytes());
-            _mbwManager.getMetadataStorage().setOtherAccountBackupState(coluUUID, MetadataStorage.BackupState.VERIFIED);
-         }
+//         for (ColuMain coluAsset : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
+//            UUID coluUUID = ColuUtils.getGuidForAsset(coluAsset, pk.getPublicKey().toAddress(_mbwManager.getNetwork(), AddressType.P2PKH).getAllAddressBytes());
+//            _mbwManager.getMetadataStorage().setOtherAccountBackupState(coluUUID, MetadataStorage.BackupState.VERIFIED);
+//         }
          updateUi();
          List<String> addressList = new ArrayList<>();
          for (BitcoinAddress address : allAddresses){

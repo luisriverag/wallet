@@ -355,11 +355,11 @@ class WalletConfiguration(private val prefs: SharedPreferences,
 
     //https://github.com/bokkypoobah/WeenusTokenFaucet
     fun getSupportedERC20Tokens(): Map<String, ERC20Token> {
-        val namePostfix = if (BuildConfig.FLAVOR == "prodnet") "" else " test"
-        val symbolPrefix = if (BuildConfig.FLAVOR == "prodnet") "" else "t"
+        val namePostfix = if (Utils.isProdnet()) "" else " test"
+        val symbolPrefix = if (Utils.isProdnet()) "" else "t"
         return TOKENS
             .map { ERC20Token(it.name + namePostfix, "$symbolPrefix${it.symbol}", it.unitExponent,
-                if (BuildConfig.FLAVOR == "prodnet") it.prodAddress else (it.testnetAddress ?: it.prodAddress)) }
+                if (Utils.isProdnet()) it.prodAddress else (it.testnetAddress ?: it.prodAddress)) }
             .associateBy { it.name }
     }
 

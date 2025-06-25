@@ -3,7 +3,7 @@
     "project_number": "347858850803",
     "firebase_url": "https://mycelium-media-flow.firebaseio.com",
     "project_id": "mycelium-media-flow",
-    "storage_bucket": "mycelium-media-flow.appspot.com"
+    "storage_bucket": "mycelium-media-flow.firebasestorage.app"
   },
   "client": [
     {
@@ -13,12 +13,7 @@
           "package_name": "com.mycelium.testnetwallet"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
@@ -26,12 +21,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -42,12 +32,7 @@
           "package_name": "com.mycelium.testnetwallet.debug"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
@@ -55,12 +40,7 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -71,12 +51,7 @@
           "package_name": "com.mycelium.wallet"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
@@ -84,12 +59,45 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347858850803:android:f835e3aa24605cc5513886",
+        "android_client_info": {
+          "package_name": "com.mycelium.wallet.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347858850803:android:4d76b5b233b7500e513886",
+        "android_client_info": {
+          "package_name": "com.mycelium.wallet.app.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     },
@@ -100,12 +108,7 @@
           "package_name": "com.mycelium.wallet.debug"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
@@ -113,12 +116,45 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "347858850803-2l5uk9cb3rhcibpkec4s3a4vpura02j5.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347858850803:android:a1bd8a79bef8161f513886",
+        "android_client_info": {
+          "package_name": "com.mycelium.walletdar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347858850803:android:87171bf40b52282b513886",
+        "android_client_info": {
+          "package_name": "com.mycelium.walletdar.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqL3Ur6TE2nGxeTItMolGTrkKppdb50Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }

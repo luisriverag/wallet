@@ -3,7 +3,7 @@ package com.mycelium.bequant
 import android.app.Activity
 import com.mycelium.bequant.remote.repositories.Api
 import com.mycelium.bequant.remote.trading.model.Symbol
-import com.mycelium.wallet.BuildConfig
+import com.mycelium.wallet.Utils
 import com.mycelium.wallet.WalletApplication
 import com.mycelium.wapi.model.ExchangeRate
 import com.mycelium.wapi.wallet.coins.AssetInfo
@@ -13,7 +13,7 @@ import com.mycelium.wapi.wallet.currency.ExchangeRateProvider
 import kotlinx.coroutines.GlobalScope
 import java.math.BigDecimal
 import java.math.MathContext
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
 
 
@@ -230,7 +230,7 @@ object BQExchangeRateManager : ExchangeRateProvider {
     private val requestLock = Any()
 
     private fun addSymbolDecorations(symbol: String): String {
-        if (BuildConfig.FLAVOR == "btctestnet") {
+        if (!Utils.isProdnet()) {
             if (symbol == "BTC") {
                 return "t$symbol"
             }

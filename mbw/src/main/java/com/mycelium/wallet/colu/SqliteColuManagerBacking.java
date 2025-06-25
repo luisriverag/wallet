@@ -601,53 +601,53 @@ public class SqliteColuManagerBacking implements WalletBacking<ColuAccountContex
          if (oldVersion < 5) {
             // Migrate SA
             List<SingleAddressAccountContext> list = new ArrayList<>();
-            Cursor cursor = null;
-            try {
-               SQLiteQueryWithBlobs blobQuery = new SQLiteQueryWithBlobs(db);
-               cursor = blobQuery.query(false, "single", new String[]{"id", "address", "addressstring", "archived", "blockheight"}, null, null,
-                       null, null, null, null);
-               MetadataStorage metadataStorage = MetadataStorage.INSTANCE;
+//            Cursor cursor = null;
+//            try {
+//               SQLiteQueryWithBlobs blobQuery = new SQLiteQueryWithBlobs(db);
+//               cursor = blobQuery.query(false, "single", new String[]{"id", "address", "addressstring", "archived", "blockheight"}, null, null,
+//                       null, null, null, null);
+//               MetadataStorage metadataStorage = MetadataStorage.INSTANCE;
 
-               Map<UUID, ColuMain> coluUUIDs = new ArrayMap<>();
-               for (ColuMain coin : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
-                  if (!Strings.isNullOrEmpty(coin.getId())) {
-                     UUID[] uuids = metadataStorage.getColuAssetUUIDs(coin.getId());
-                     for (UUID uuid : uuids) {
-                        coluUUIDs.put(uuid, coin);
-                     }
-                  }
-               }
-               while (cursor.moveToNext()) {
-                  UUID id = SQLiteQueryWithBlobs.uuidFromBytes(cursor.getBlob(0));
-                  byte[] addressBytes = cursor.getBlob(1);
-                  String addressString = cursor.getString(2);
-                  BitcoinAddress address = new BitcoinAddress(addressBytes, addressString);
-                  UUID newId = ColuUtils.getGuidForAsset(coluUUIDs.get(id), address.getAllAddressBytes());
-
-                  metadataStorage.storeAccountLabel(newId, metadataStorage.getLabelByAccount(id));
-                  metadataStorage.setOtherAccountBackupState(newId, metadataStorage.getOtherAccountBackupState(id));
-                  metadataStorage.storeArchived(newId, metadataStorage.getArchived(id));
-                  if (coluUUIDs.keySet().contains(id)) {
-                     String assetId = coluUUIDs.get(id).getId();
-                     metadataStorage.addColuAssetUUIDs(assetId, newId);
-                     metadataStorage.removeColuAssetUUIDs(assetId, id);
-                     Optional<String> coluBalance = metadataStorage.getColuBalance(id);
-                     if (coluBalance.isPresent()) {
-                        metadataStorage.storeColuBalance(newId, coluBalance.get());
-                     }
-                  }
-                  metadataStorage.deleteAccountMetadata(id);
-                  metadataStorage.deleteOtherAccountBackupState(id);
-
-                  boolean isArchived = cursor.getInt(3) == 1;
-                  int blockHeight = cursor.getInt(4);
-                  list.add(new SingleAddressAccountContext(newId, ImmutableMap.of(address.getType(), address), isArchived, blockHeight, AddressType.P2SH_P2WPKH));
-               }
-            } finally {
-               if (cursor != null) {
-                  cursor.close();
-               }
-            }
+//               Map<UUID, ColuMain> coluUUIDs = new ArrayMap<>();
+//               for (ColuMain coin : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
+//                  if (!Strings.isNullOrEmpty(coin.getId())) {
+//                     UUID[] uuids = metadataStorage.getColuAssetUUIDs(coin.getId());
+//                     for (UUID uuid : uuids) {
+//                        coluUUIDs.put(uuid, coin);
+//                     }
+//                  }
+//               }
+//               while (cursor.moveToNext()) {
+//                  UUID id = SQLiteQueryWithBlobs.uuidFromBytes(cursor.getBlob(0));
+//                  byte[] addressBytes = cursor.getBlob(1);
+//                  String addressString = cursor.getString(2);
+//                  BitcoinAddress address = new BitcoinAddress(addressBytes, addressString);
+//                  UUID newId = ColuUtils.getGuidForAsset(coluUUIDs.get(id), address.getAllAddressBytes());
+//
+//                  metadataStorage.storeAccountLabel(newId, metadataStorage.getLabelByAccount(id));
+//                  metadataStorage.setOtherAccountBackupState(newId, metadataStorage.getOtherAccountBackupState(id));
+//                  metadataStorage.storeArchived(newId, metadataStorage.getArchived(id));
+//                  if (coluUUIDs.keySet().contains(id)) {
+//                     String assetId = coluUUIDs.get(id).getId();
+//                     metadataStorage.addColuAssetUUIDs(assetId, newId);
+//                     metadataStorage.removeColuAssetUUIDs(assetId, id);
+//                     Optional<String> coluBalance = metadataStorage.getColuBalance(id);
+//                     if (coluBalance.isPresent()) {
+//                        metadataStorage.storeColuBalance(newId, coluBalance.get());
+//                     }
+//                  }
+//                  metadataStorage.deleteAccountMetadata(id);
+//                  metadataStorage.deleteOtherAccountBackupState(id);
+//
+//                  boolean isArchived = cursor.getInt(3) == 1;
+//                  int blockHeight = cursor.getInt(4);
+//                  list.add(new SingleAddressAccountContext(newId, ImmutableMap.of(address.getType(), address), isArchived, blockHeight, AddressType.P2SH_P2WPKH));
+//               }
+//            } finally {
+//               if (cursor != null) {
+//                  cursor.close();
+//               }
+//            }
             db.execSQL("CREATE TABLE single_new (id TEXT PRIMARY KEY, addresses TEXT, archived INTEGER, blockheight INTEGER, addressType TEXT);");
             SQLiteStatement statement = db.compileStatement("INSERT OR REPLACE INTO single_new VALUES (?,?,?,?,?)");
             for (SingleAddressAccountContext saaContext : list) {
@@ -706,16 +706,16 @@ public class SqliteColuManagerBacking implements WalletBacking<ColuAccountContex
 
                SQLiteStatement updateCoinIdStatement = db.compileStatement("UPDATE single SET coinId=? WHERE id=?");
                MetadataStorage metadataStorage = MetadataStorage.INSTANCE;
-               for (ColuMain coin : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
-                  if (!Strings.isNullOrEmpty(coin.getId())) {
-                     UUID[] uuids = metadataStorage.getColuAssetUUIDs(coin.getId());
-                     for (UUID uuid : uuids) {
-                        updateCoinIdStatement.bindString(1, coin.getId());
-                        updateCoinIdStatement.bindBlob(2, uuidToBytes(uuid));
-                        updateCoinIdStatement.execute();
-                     }
-                  }
-               }
+//               for (ColuMain coin : ColuUtils.allColuCoins(BuildConfig.FLAVOR)) {
+//                  if (!Strings.isNullOrEmpty(coin.getId())) {
+//                     UUID[] uuids = metadataStorage.getColuAssetUUIDs(coin.getId());
+//                     for (UUID uuid : uuids) {
+//                        updateCoinIdStatement.bindString(1, coin.getId());
+//                        updateCoinIdStatement.bindBlob(2, uuidToBytes(uuid));
+//                        updateCoinIdStatement.execute();
+//                     }
+//                  }
+//               }
             }
 
             // DROP previous table with transaction because txData field replaced old raw tx column

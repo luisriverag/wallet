@@ -7,7 +7,6 @@ import com.mrd.bitlib.crypto.BipDerivationType
 import com.mrd.bitlib.crypto.HdKeyNode
 import com.mrd.bitlib.model.NetworkParameters
 import com.mrd.bitlib.model.hdpath.HdKeyPath
-import com.mycelium.wallet.BuildConfig
 import com.mycelium.wallet.Utils
 import com.mycelium.wapi.wallet.AccountScanManager
 import com.mycelium.wapi.wallet.AccountScanManager.AccountStatus
@@ -264,8 +263,8 @@ abstract class AbstractAccountScanManager @JvmOverloads constructor(
     companion object {
         const val ACCOUNT_LOOKAHEAD = 20
         val BIP44FIOCOIN_TYPE = HdKeyPath.BIP44.getHardenedChild(235)
-        val BIP44COIN_TYPE = HdKeyPath.BIP44.getCoinTypeBitcoin(BuildConfig.FLAVOR == "btctestnet")
-        val BIP49COIN_TYPE = HdKeyPath.BIP49.getCoinTypeBitcoin(BuildConfig.FLAVOR == "btctestnet")
-        val BIP84COIN_TYPE = HdKeyPath.BIP84.getCoinTypeBitcoin(BuildConfig.FLAVOR == "btctestnet")
+        val BIP44COIN_TYPE = HdKeyPath.BIP44.getCoinTypeBitcoin(!Utils.isProdnet())
+        val BIP49COIN_TYPE = HdKeyPath.BIP49.getCoinTypeBitcoin(!Utils.isProdnet())
+        val BIP84COIN_TYPE = HdKeyPath.BIP84.getCoinTypeBitcoin(!Utils.isProdnet())
     }
 }
