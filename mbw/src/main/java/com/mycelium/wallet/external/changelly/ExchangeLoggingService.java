@@ -2,6 +2,7 @@ package com.mycelium.wallet.external.changelly;
 
 
 import com.mycelium.wallet.BuildConfig;
+import com.mycelium.wallet.Utils;
 import com.mycelium.wallet.external.changelly.model.Order;
 
 import okhttp3.OkHttpClient;
@@ -12,7 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface ExchangeLoggingService {
-    String endPoint = BuildConfig.FLAVOR.equals("btctestnet")
+    String endPoint = !Utils.isProdnet()
             ? "https://wallet-exchange-admin-stg.mycelium.com/api/"
             : "https://wallet-exchange-admin.mycelium.com/api/";
 

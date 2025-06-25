@@ -231,9 +231,9 @@ public class ExchangeRateManager implements ExchangeRateProvider {
         }
         _latestRates = new HashMap<>();
         for (GetExchangeRatesResponse response : latestRates) {
-            String fromCurrency = Util.addTestnetSymbolDecoration(response.getFromCurrency(), BuildConfig.FLAVOR.equals("btctestnet"));
+            String fromCurrency = Util.addTestnetSymbolDecoration(response.getFromCurrency(), !Utils.isProdnet());
             fromCurrency = fromCurrency.equals("USDT") ? "USDT20" : fromCurrency;
-            String toCurrency = Util.addTestnetSymbolDecoration(response.getToCurrency(), BuildConfig.FLAVOR.equals("btctestnet"));
+            String toCurrency = Util.addTestnetSymbolDecoration(response.getToCurrency(), !Utils.isProdnet());
             if (_latestRates.get(fromCurrency) != null) {
                 _latestRates.get(fromCurrency).put(toCurrency, response);
             } else {

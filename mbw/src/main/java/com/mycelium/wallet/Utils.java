@@ -1073,31 +1073,38 @@ public class Utils {
    }
 
    public static CryptoCurrency getBtcCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? BitcoinMain.get() : BitcoinTest.get();
+      return isProdnet() ? BitcoinMain.get() : BitcoinTest.get();
    }
 
    public static CryptoCurrency getBtcvCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? BitcoinVaultMain.INSTANCE : BitcoinVaultTest.INSTANCE;
+      return isProdnet() ? BitcoinVaultMain.INSTANCE : BitcoinVaultTest.INSTANCE;
    }
 
    public static CryptoCurrency getEthCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? EthMain.INSTANCE : EthTest.INSTANCE;
+      return isProdnet() ? EthMain.INSTANCE : EthTest.INSTANCE;
    }
 
    public static CryptoCurrency getMtCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? MTCoin.INSTANCE : MTCoinTest.INSTANCE;
+      return isProdnet() ? MTCoin.INSTANCE : MTCoinTest.INSTANCE;
    }
 
    public static CryptoCurrency getMassCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? MASSCoin.INSTANCE : MASSCoinTest.INSTANCE;
+      return isProdnet() ? MASSCoin.INSTANCE : MASSCoinTest.INSTANCE;
    }
 
    public static CryptoCurrency getRmcCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? RMCCoin.INSTANCE : RMCCoinTest.INSTANCE;
+      return isProdnet() ? RMCCoin.INSTANCE : RMCCoinTest.INSTANCE;
    }
 
    public static FIOToken getFIOCoinType() {
-      return BuildConfig.FLAVOR.equals("prodnet") ? FIOMain.INSTANCE : FIOTest.INSTANCE;
+      return isProdnet() ? FIOMain.INSTANCE : FIOTest.INSTANCE;
+   }
+
+   public static boolean isProdnet() {
+       return switch (BuildConfig.FLAVOR) {
+           case "prodnet", "huaweiProdnet" -> true;
+           default -> false;
+       };
    }
 
    public static boolean isValidEmailAddress(String value) {

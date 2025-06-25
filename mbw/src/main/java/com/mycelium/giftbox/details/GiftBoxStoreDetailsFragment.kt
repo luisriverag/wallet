@@ -13,10 +13,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.mycelium.giftbox.details.viewmodel.GiftBoxStoreDetailsViewModel
 import com.mycelium.giftbox.loadImage
 import com.mycelium.giftbox.setupDescription
-import com.mycelium.wallet.BuildConfig
+import com.mycelium.wallet.Utils
 import com.mycelium.wallet.WalletConfiguration
 import com.mycelium.wallet.databinding.FragmentGiftboxStoreDetailsBinding
-import java.util.*
+import java.util.Locale
 
 class GiftBoxStoreDetailsFragment : Fragment() {
     private var binding: FragmentGiftboxStoreDetailsBinding? = null
@@ -81,7 +81,7 @@ class GiftBoxStoreDetailsFragment : Fragment() {
 //                success = { checkout ->
         val checkout = args.mcproduct
 //                    viewModel.currencies = arrayOf(Utils.getBtcCoinType())
-                    if (BuildConfig.FLAVOR == "btctestnet") {
+                    if (!Utils.isProdnet()) {
                         changeToTestnetAddresses()
                     }
                     viewModel.setProduct(checkout)
