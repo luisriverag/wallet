@@ -89,7 +89,7 @@ class StoresAdapter : ListAdapter<MCProductInfo, RecyclerView.ViewHolder>(DiffCa
 
                 holder.binding.additional.text = item?.cardValues()
                 holder.itemView.setOnClickListener {
-                    itemClickListener?.invoke(getItem(bindingAdapterPosition))
+                    itemClickListener?.invoke(getItem(holder.absoluteAdapterPosition))
                 }
             }
 
