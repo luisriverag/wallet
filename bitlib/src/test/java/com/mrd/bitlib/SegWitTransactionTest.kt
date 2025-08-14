@@ -1,7 +1,13 @@
 package com.mrd.bitlib
 
-import com.mrd.bitlib.crypto.*
-import com.mrd.bitlib.model.*
+import com.mrd.bitlib.crypto.IPrivateKeyRing
+import com.mrd.bitlib.crypto.IPublicKeyRing
+import com.mrd.bitlib.crypto.InMemoryPrivateKey
+import com.mrd.bitlib.crypto.PublicKey
+import com.mrd.bitlib.model.BitcoinTransaction
+import com.mrd.bitlib.model.NetworkParameters
+import com.mrd.bitlib.model.ScriptOutput
+import com.mrd.bitlib.model.UnspentTransactionOutput
 import com.mrd.bitlib.util.HexUtils.toBytes
 import com.mrd.bitlib.util.HexUtils.toHex
 import org.junit.Assert

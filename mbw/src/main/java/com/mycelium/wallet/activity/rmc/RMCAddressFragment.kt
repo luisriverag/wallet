@@ -9,12 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.mycelium.wallet.MbwManager
 import com.mycelium.wallet.R
 import com.mycelium.wallet.activity.modern.Toaster
-import com.mycelium.wallet.activity.rmc.adapter.AddressWidgetAdapter
 import com.mycelium.wallet.databinding.RmcAddressViewBinding
 import com.mycelium.wallet.event.AccountChanged
 import com.mycelium.wallet.event.BalanceChanged
@@ -29,14 +29,13 @@ class RMCAddressFragment : Fragment() {
 
     private var _mbwManager: MbwManager? = null
     private var sharedPreferences: SharedPreferences? = null
-    private var adapter: AddressWidgetAdapter? = null
     private var binding: RmcAddressViewBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _mbwManager = MbwManager.getInstance(activity)
         sharedPreferences =
-            activity!!.getSharedPreferences("rmc_notification", Context.MODE_PRIVATE)
+            requireActivity().getSharedPreferences("rmc_notification", Context.MODE_PRIVATE)
     }
 
     override fun onCreateView(
@@ -49,12 +48,9 @@ class RMCAddressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AddressWidgetAdapter(requireActivity(), _mbwManager!!)
-        binding?.viewPager?.adapter = adapter
         binding?.viewPager!!.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                binding?.title?.text = adapter!!.getPageTitle(position)
             }
         })
         binding?.pagerIndicator?.setupWithViewPager(binding?.viewPager!!)
@@ -117,11 +113,12 @@ class RMCAddressFragment : Fragment() {
                 if ((view.findViewById<View>(R.id.add_to_calendar) as Switch).isChecked) {
                     addEventToCalendar()
                 }
-                sharedPreferences!!.edit().putBoolean(
-                    RMC_ACTIVE_PUSH_NOTIFICATION,
-                    (view.findViewById<View>(R.id.add_push_notification) as Switch).isChecked
-                )
-                    .apply()
+                sharedPreferences!!.edit {
+                    putBoolean(
+                        RMC_ACTIVE_PUSH_NOTIFICATION,
+                        (view.findViewById<View>(R.id.add_push_notification) as Switch).isChecked
+                    )
+                }
             }.setNegativeButton(R.string.cancel, null)
             .create()
             .show()
@@ -146,7 +143,6 @@ class RMCAddressFragment : Fragment() {
 
     private fun updateUi() {
         activeBtnProgress()
-        adapter!!.notifyDataSetChanged()
     }
 
     @Subscribe
