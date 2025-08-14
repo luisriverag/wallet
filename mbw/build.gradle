@@ -202,8 +202,8 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        versionCode 3190400
-        versionName '3.19.4.0'
+        versionCode 3200000
+        versionName '3.20.0.0'
 
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
