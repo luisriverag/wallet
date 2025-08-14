@@ -80,9 +80,9 @@ class StoresAdapter : ListAdapter<MCProductInfo, RecyclerView.ViewHolder>(DiffCa
 
 
                 holder.binding.title.text = item.name
-                item.categories?.map {
+                item.categories?.joinToString {
                     it.replace("-", " ").capitalize(Locale.ROOT)
-                }?.joinToString().let {
+                }.let {
                     holder.binding.description.text =
                         if (it?.isNotEmpty() == true) it else item.description
                 }
