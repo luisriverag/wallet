@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.mycelium.giftbox.client.models.Status
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 //"order_id": "12345",
 //"status": "completed",
@@ -20,7 +21,9 @@ data class MCOrderStatusResponse(
     @JsonProperty("card_code")
     var cardCode: String? = null,
     @JsonProperty("card_pin")
-    var cardPin: String? = null
+    var cardPin: String? = null,
+    @JsonProperty("card_validity_date")
+    var cardValidityDate: Date? = null,
 ) : MCOrderCommon, Parcelable
 
 

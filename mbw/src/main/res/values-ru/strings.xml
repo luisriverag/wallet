@@ -1511,4 +1511,5 @@
     <string name="i_know_what_iam_doing">Я понимаю, что я делаю</string>
     <string name="delete_private_key_checkbox">Удалить приватный ключ, оставив аккаунт только для просмотра.</string>
     <string name="delete_pk_message"><![CDATA[Вы хотите удалить приватный ключ аккаунта <b>"%1$s"</b> с балансом <b>%2$s</b>?]]></string>
+    <string name="activate_by">Активировать до</string>
 </resources>

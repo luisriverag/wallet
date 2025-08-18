@@ -99,6 +99,9 @@ fun Card.shareText(resources: Resources): String {
     if (pin.isNotEmpty()) {
         text += "\nPin: $pin"
     }
+    if(activateBy != null) {
+        text += "\nActivate by: ${activateBy.getDateString(resources)}"
+    }
     return text
 }
 
@@ -207,6 +210,7 @@ fun GiftboxDB.getCards(): List<Card> =
                                                    amount: String?,
                                                    expiryDate: String?,
                                                    code: String,
+                                                   activateBy: Date?,
                                                    deliveryUrl: String,
                                                    pin: String,
                                                    timestamp: Date?,
@@ -220,6 +224,7 @@ fun GiftboxDB.getCards(): List<Card> =
             amount,
             expiryDate,
             code,
+            activateBy,
             deliveryUrl,
             pin,
             timestamp,

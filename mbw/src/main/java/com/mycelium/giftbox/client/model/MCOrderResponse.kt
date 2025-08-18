@@ -49,5 +49,11 @@ data class MCOrderResponse(
     @JsonProperty("expiration_time")
     val expireTime: Int,
 
+    @JsonProperty("card_validity_date")
+    var cardValidityDate: Date? = null,
+    
+    @JsonProperty("activate_by")
+    var activateBy: Date? = null,
+
     var quantity: BigDecimal = BigDecimal.ONE
 ) : MCOrderCommon, Parcelable

@@ -37,8 +37,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.math.BigDecimal
-import java.util.*
-import kotlin.text.orEmpty
+import java.util.UUID
 
 class MCGiftboxApiRepository {
 
@@ -63,7 +62,7 @@ class MCGiftboxApiRepository {
 
     private val giftbxDB = GiftboxDB.invoke(
         AndroidSqliteDriver(GiftboxDB.Schema, WalletApplication.getInstance(), "giftbox.db"),
-        GiftboxCard.Adapter(dateAdapter),
+        GiftboxCard.Adapter(dateAdapter, dateAdapter),
         GiftboxProduct.Adapter(
             Adapters.listAdapter, Adapters.listAdapter,
             Adapters.bigDecimalAdapter, Adapters.bigDecimalAdapter,
@@ -270,6 +269,7 @@ class MCGiftboxApiRepository {
                 order.product?.currency,
                 order.faceValue.toString(),
                 order.product?.expiryData,
+                order.activateBy,
                 order.createdDate,
                 order.orderId,
                 order.cardCode.orEmpty(),
@@ -286,6 +286,7 @@ class MCGiftboxApiRepository {
                     order.faceValue.toString(),
                     order.product?.expiryData,
                     order.cardCode.orEmpty(),
+                    order.activateBy,
                     order.cardUrl.orEmpty(),
                     order.cardPin.orEmpty(),
                     order.createdDate

@@ -1,0 +1,1 @@
+ALTER TABLE GiftboxCard ADD COLUMN activateBy TEXT AS Date;
