@@ -80,16 +80,16 @@ class StoresAdapter : ListAdapter<MCProductInfo, RecyclerView.ViewHolder>(DiffCa
 
 
                 holder.binding.title.text = item.name
-                item.categories?.map {
+                item.categories?.joinToString {
                     it.replace("-", " ").capitalize(Locale.ROOT)
-                }?.joinToString().let {
+                }.let {
                     holder.binding.description.text =
                         if (it?.isNotEmpty() == true) it else item.description
                 }
 
                 holder.binding.additional.text = item?.cardValues()
                 holder.itemView.setOnClickListener {
-                    itemClickListener?.invoke(getItem(bindingAdapterPosition))
+                    itemClickListener?.invoke(getItem(holder.absoluteAdapterPosition))
                 }
             }
 
