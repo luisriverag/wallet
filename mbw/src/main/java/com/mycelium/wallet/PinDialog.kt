@@ -18,7 +18,7 @@ import com.mycelium.wallet.databinding.EnterPinDialogBinding
 import com.mycelium.wallet.databinding.EnterPinDisplayBinding
 import com.mycelium.wallet.databinding.EnterPinNumpadBinding
 
-open class PinDialog(context: Context, val hidden: Boolean, cancelable: Boolean) :
+open class PinDialog(context: Context, val hidden: Boolean, val cancelable: Boolean) :
     AppCompatDialog(context) {
     private val fingerprintHandler = FingerprintHandler().apply {
         successListener = {
@@ -119,6 +119,10 @@ open class PinDialog(context: Context, val hidden: Boolean, cancelable: Boolean)
         setContentView(EnterPinDialogBinding.inflate(layoutInflater).apply {
             numpadBinding = this.keyboard.numPad
             pinBinding = this.keyboard.pinDisplay
+            this.cancel.isVisible = cancelable
+            this.cancel.setOnClickListener {
+                dismiss()
+            }
         }.root)
         twoFactorHelper.needFingerCallback = {
             initFingerprint(context)
