@@ -1,4 +1,5 @@
 [versions]
+android-targetSdk = "36"
 bitcoinjCore = "0.17"
 bouncycastle = "1.79"
 jackson = "2.9.6"
@@ -18,7 +19,7 @@ espresso = "3.6.1"
 glide = "5.0.0-rc01"
 junit = "1.2.1"
 kotlin = '2.0.21'
-androidGradlePlugin = "8.8.2"
+androidGradlePlugin = "8.12.0"
 sqldelight = "2.0.2"
 playServicesBase = "18.7.0"
 

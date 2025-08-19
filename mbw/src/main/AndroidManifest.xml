@@ -293,9 +293,7 @@
                 android:name="android.app.default_searchable"
                 android:value=".activity.news.NewsSearchableActivity" />
         </activity>
-        <activity
-            android:name=".activity.news.NewsImageActivity"
-            android:screenOrientation="landscape" />
+        <activity android:name=".activity.news.NewsImageActivity" />
         <activity android:name=".activity.export.ExportFioKeyActivity" />
         <activity
             android:name=".activity.fio.registername.RegisterFioNameActivity"
