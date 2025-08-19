@@ -52,8 +52,5 @@ data class MCOrderResponse(
     @JsonProperty("card_validity_date")
     var cardValidityDate: Date? = null,
     
-    @JsonProperty("activate_by")
-    var activateBy: Date? = null,
-
     var quantity: BigDecimal = BigDecimal.ONE
 ) : MCOrderCommon, Parcelable

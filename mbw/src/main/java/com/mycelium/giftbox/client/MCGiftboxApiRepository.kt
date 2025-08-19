@@ -269,7 +269,7 @@ class MCGiftboxApiRepository {
                 order.product?.currency,
                 order.faceValue.toString(),
                 order.product?.expiryData,
-                order.activateBy,
+                order.cardValidityDate,
                 order.createdDate,
                 order.orderId,
                 order.cardCode.orEmpty(),
@@ -286,7 +286,7 @@ class MCGiftboxApiRepository {
                     order.faceValue.toString(),
                     order.product?.expiryData,
                     order.cardCode.orEmpty(),
-                    order.activateBy,
+                    order.cardValidityDate,
                     order.cardUrl.orEmpty(),
                     order.cardPin.orEmpty(),
                     order.createdDate

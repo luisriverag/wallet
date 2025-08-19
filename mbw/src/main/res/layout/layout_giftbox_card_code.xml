@@ -127,7 +127,7 @@
             android:text="@string/activate_by"
             android:textColor="@color/giftbox_label"
             android:textSize="14sp"
-            android:visibility="@{viewModel.activateBefore.isEmpty() ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.activateBy.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pinCode" />
 
@@ -141,10 +141,9 @@
             android:ellipsize="end"
             android:paddingEnd="@dimen/size_x1"
             android:singleLine="true"
-            android:text="@{viewModel.activateBefore}"
+            android:text="@{viewModel.activateBy}"
             android:textSize="14sp"
-            android:visibility="@{viewModel.activateBefore.isEmpty() ? View.GONE : View.VISIBLE}"
-            app:drawableRightCompat="@drawable/ic_content_copy_white"
+            android:visibility="@{viewModel.activateBy.isEmpty() ? View.GONE : View.VISIBLE}"
             app:layout_constraintBaseline_toBaselineOf="@id/activateByLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activateByLabel"
