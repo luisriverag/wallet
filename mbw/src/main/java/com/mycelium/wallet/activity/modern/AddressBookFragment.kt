@@ -5,11 +5,17 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import com.mycelium.wallet.AddressBookManager
 import com.mycelium.wallet.AddressBookManager.IconEntry
@@ -20,6 +26,7 @@ import com.mycelium.wallet.activity.ScanActivity
 import com.mycelium.wallet.activity.StringHandlerActivity
 import com.mycelium.wallet.activity.modern.adapter.AddressBookAdapter
 import com.mycelium.wallet.activity.modern.adapter.SelectAssetDialog.Companion.getInstance
+import com.mycelium.wallet.activity.modern.helper.AddDialog
 import com.mycelium.wallet.activity.receive.ReceiveCoinsActivity.Companion.callMe
 import com.mycelium.wallet.activity.send.SendCoinsActivity
 import com.mycelium.wallet.activity.util.EnterAddressLabelUtil
@@ -34,7 +41,7 @@ import com.mycelium.wallet.event.AssetSelected
 import com.mycelium.wapi.wallet.Address
 import com.mycelium.wapi.wallet.coins.CryptoCurrency
 import com.squareup.otto.Subscribe
-import java.util.*
+import java.util.UUID
 
 class AddressBookFragment : Fragment() {
     private var mSelectedAddress: Address? = null
@@ -46,6 +53,7 @@ class AddressBookFragment : Fragment() {
     private var currency: CryptoCurrency? = null
     private var isSelectOnly = false
     private var binding: AddressBookBinding? = null
+    private var menuProvider = MenuImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +67,6 @@ class AddressBookFragment : Fragment() {
             mbwManager!!.selectedAccount.coinType
         }
         isSelectOnly = requireArguments().getBoolean(SELECT_ONLY)
-        setHasOptionsMenu(!isSelectOnly)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -81,6 +88,7 @@ class AddressBookFragment : Fragment() {
     override fun onPause() {
         MbwManager.getEventBus().unregister(this)
         super.onPause()
+        finishActionMode()
     }
 
     override fun onDestroyView() {
@@ -89,8 +97,8 @@ class AddressBookFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (addDialog != null && addDialog!!.isShowing) {
-            addDialog!!.dismiss()
+        if (addDialog?.isShowing == true) {
+            addDialog?.dismiss()
         }
         super.onDestroy()
     }
@@ -157,9 +165,15 @@ class AddressBookFragment : Fragment() {
         }
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (!isVisibleToUser) {
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if(binding == null) {
+            return
+        }
+        if (menuVisible && !isSelectOnly) {
+            requireActivity().addMenuProvider(menuProvider, viewLifecycleOwner)
+        } else {
+            requireActivity().removeMenuProvider(menuProvider)
             finishActionMode()
         }
     }
@@ -177,8 +191,8 @@ class AddressBookFragment : Fragment() {
                 return true
             }
 
-            override fun onPrepareActionMode(actionMode: ActionMode, menu: Menu): Boolean {
-                currentActionMode = actionMode
+            override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+                currentActionMode = mode
                 view.background = resources.getDrawable(R.color.selectedrecord)
                 return true
             }
@@ -232,42 +246,6 @@ class AddressBookFragment : Fragment() {
                 .create()
                 .show()
     }
-
-    private inner class AddDialog(activity: Activity) : Dialog(activity) {
-        init {
-            setContentView(R.layout.add_to_address_book_dialog)
-            setTitle(R.string.add_to_address_book_dialog_title)
-            findViewById<View>(R.id.btScan).setOnClickListener { v: View? ->
-                val request = addressBookScanRequest
-                ScanActivity.callMe(this@AddressBookFragment, SCAN_RESULT_CODE.toInt(), request)
-                dismiss()
-            }
-            val addresses = mbwManager!!.getWalletManager(false).parseAddress(Utils.getClipboardString(activity))
-            findViewById<View>(R.id.btClipboard).isEnabled = addresses.size != 0
-            findViewById<View>(R.id.btClipboard).setOnClickListener { v: View? ->
-                if (addresses.isNotEmpty()) {
-                    if (addresses.size == 1) {
-                        addFromAddress(addresses[0])
-                    } else {
-                        getInstance(addresses).show(requireFragmentManager(), "dialog")
-                    }
-                } else {
-                    Toaster(this@AddDialog.context).toast(R.string.unrecognized_format, true)
-                }
-                dismiss()
-            }
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-            if (item.itemId == R.id.miAddAddress) {
-                addDialog = AddDialog(requireActivity())
-                addDialog?.show()
-                true
-            } else {
-                super.onOptionsItemSelected(item)
-            }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         if (requestCode != SCAN_RESULT_CODE.toInt()) {
@@ -331,8 +309,40 @@ class AddressBookFragment : Fragment() {
         }
     }
 
+    internal inner class MenuImpl : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.addressbook_options_global, menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+            if (menuItem.itemId == R.id.miAddAddress) {
+                addDialog = AddDialog(requireActivity()).apply {
+                    clipboardClickListener = { addresses ->
+                        if (addresses.isNotEmpty()) {
+                            if (addresses.size == 1) {
+                                addFromAddress(addresses[0])
+                            } else {
+                                getInstance(addresses).show(requireFragmentManager(), "dialog")
+                            }
+                        } else {
+                            Toaster(requireActivity()).toast(R.string.unrecognized_format, true)
+                        }
+                    }
+                    scanClickListener = {
+                        ScanActivity.callMe(
+                            this@AddressBookFragment, SCAN_RESULT_CODE.toInt(), addressBookScanRequest
+                        )
+                    }
+                }
+                addDialog?.show()
+                true
+            } else {
+                false
+            }
+    }
+
     companion object {
-        private const val SCAN_RESULT_CODE: Short = 1
+        const val SCAN_RESULT_CODE: Short = 1
         const val ADDRESS_RESULT_NAME = "address_result"
         const val ADDRESS_RESULT_ID = "address_result_id"
         const val OWN = "own"

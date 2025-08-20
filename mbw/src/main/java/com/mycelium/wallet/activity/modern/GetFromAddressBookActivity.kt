@@ -35,7 +35,6 @@ package com.mycelium.wallet.activity.modern
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager.widget.ViewPager
 import com.mycelium.wallet.MbwManager
 import com.mycelium.wallet.R
 import com.mycelium.wallet.activity.modern.adapter.TabsAdapter
@@ -55,7 +54,7 @@ class GetFromAddressBookActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         binding.pagerTabs.setupWithViewPager(binding.pager)
         val mbwManager = MbwManager.getInstance(this)
-        val mTabsAdapter = TabsAdapter(this, binding.pager, mbwManager)
+        val mTabsAdapter = TabsAdapter(this, mbwManager)
 
         val myAddressesTab =
             binding.pagerTabs.newTab().setText(getResources().getString(R.string.my_accounts))
