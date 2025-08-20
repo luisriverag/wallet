@@ -1,4 +1,6 @@
 [versions]
+android-minSdk = "24"
+android-compileSdk = "36"
 android-targetSdk = "36"
 bitcoinjCore = "0.17"
 bouncycastle = "1.79"

@@ -11,16 +11,15 @@ dependencies {
 
 android {
     namespace 'com.btchip'
-    compileSdk androidCompileSdkVersion
-    buildToolsVersion androidSdkBuildVersion
+    compileSdk = libs.versions.android.compileSdk.get().toInteger()
 
     buildFeatures {
         aidl true
     }
 
     defaultConfig {
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargetSdkVersion
+        minSdk = libs.versions.android.minSdk.get().toInteger()
+        targetSdk = libs.versions.android.targetSdk.get().toInteger()
     }
 
     lintOptions {

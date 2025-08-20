@@ -2,12 +2,11 @@ apply plugin: 'com.android.library'
 
 android {
     namespace 'com.google.android.vending.licensing'
-    compileSdk androidCompileSdkVersion
-    buildToolsVersion androidSdkBuildVersion
+    compileSdk = libs.versions.android.compileSdk.get().toInteger()
     defaultConfig {
         versionCode 2
         versionName '1.5'
-        minSdkVersion androidMinSdkVersion
-        targetSdkVersion androidTargetSdkVersion
+        minSdk = libs.versions.android.minSdk.get().toInteger()
+        targetSdk = libs.versions.android.targetSdk.get().toInteger()
     }
 }
