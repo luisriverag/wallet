@@ -1238,7 +1238,7 @@
 <!--    <string name="success1">Успех</string>-->
     <string name="gift_card_ready">Ваша подарочная карта готова! Ссылка для скачивания и инструкция по использованию доступны в <u>Мои подарочные карты</u>.</string>
 <!--    <string name="return_to_payment">Назад к заказам</string>-->
-    <string name="giftbox_failed_text">Не волнуйтесь, ваши средства в полной безопасности. К сожалению, магазин не смог выпустить карту из-за технических неполадок. Пожалуйста, свяжитесь с нами по адресу support@mycelium.com  для получения помощи.</string>
+    <string name="giftbox_failed_text">Не волнуйтесь, ваши средства в полной безопасности. К сожалению, магазин не смог выпустить карту из-за технических неполадок. Пожалуйста, свяжитесь с нами по адресу %s  для получения помощи.</string>
     <string name="card_value1">Номинал карты</string>
 <!--    <string name="no_results_found_for_s"><![CDATA[Нет результатов по запросу \"<font color="#ffffff">%s</font>\".<br/>Проверьте правильность написания и попробуйте снова.]]></string>-->
 <!--    <string name="no_stores_found">МАГАЗИНЫ НЕ НАЙДЕНЫ</string>-->
@@ -1347,7 +1347,7 @@
     <string name="send_fee_hint"><b>ВНИМАНИЕ.</b> Транзакции с комиссией майнеров низкого приоритета могут никогда не подтвердиться или подтверждаться в течение многих часов или даже дней. Не выбирайте низкий приоритет, если вы не понимаете, как работает сеть биткоина.</string>
     <string name="hours_or_more">%s или больше</string>
     <string name="russia">Россия</string>
-    <string name="giftbox_expired_text"><![CDATA[Срок действия заказа истек. Пожалуйста, свяжитесь со службой поддержки - <font color="#4583de">support@mycelium.com</font>]]></string>
+    <string name="giftbox_expired_text"><![CDATA[Срок действия заказа истек. Пожалуйста, свяжитесь со службой поддержки - <font color="#4583de">%s</font>]]></string>
     <string name="fingerprint_detection_failed">Сканирование отпечатка не удалось</string>
     <string name="fingerprint_not_available">Отпечаток недоступен</string>
 <!--    <string name="unlock_label_fingerprint">Продолжить, используя отпечаток пальца</string>-->

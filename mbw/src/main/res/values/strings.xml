@@ -1801,7 +1801,7 @@ All new bitcoins, mined by the pool, are proportionally distributed among RMC bi
     <string name="send_fee_hint"><b>ATTENTION.</b> Transactions with low priority miner fee may never be confirmed or confirmed in many hours or even days. Don\'t choose low priority if you don\'t understand how bitcoin network works.</string>
     <string name="hours_or_more">%s or more</string>
     <string name="russia">Russia</string>
-    <string name="giftbox_expired_text"><![CDATA[The order expired. Please contact the support - <font color="#4583de">@string/contact_giftcard_email</font>]]></string>
+    <string name="giftbox_expired_text"><![CDATA[The order expired. Please contact the support - <font color="#4583de">%s</font>]]></string>
     <string name="fingerprint_detection_failed">Fingerprint detection failed</string>
     <string name="fingerprint_not_available">Fingerprint not available</string>
     <string name="unlock_label_fingerprint">Proceed using fingerprint</string>

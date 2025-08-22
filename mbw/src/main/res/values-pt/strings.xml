@@ -783,7 +783,7 @@
 
     <string name="return_to_payment">Voltar às encomendas</string>
 
-    <string name="giftbox_failed_text">Não se preocupe, os seus fundos estão seguros. Infelizmente, a loja não conseguiu emitir o cartão devido a dificuldades técnicas. Por favor, entre em contacto connosco através do endereço support@mycelium.com para assistê</string>
+    <string name="giftbox_failed_text">Não se preocupe, os seus fundos estão seguros. Infelizmente, a loja não conseguiu emitir o cartão devido a dificuldades técnicas. Por favor, entre em contacto connosco através do endereço %s para assistê</string>
 
     <string name="card_value1">Valor do cartão</string>
 
@@ -1004,7 +1004,7 @@
     <string name="giftbox_expired_text">
         <![CDATA[
         A encomenda expirou. Por favor, contacte o suporte -
-        <font color="#4583de">support@mycelium.com</font>
+        <font color="#4583de">%s</font>
         ]]>
     </string>
     <string name="fingerprint_detection_failed">Falha na deteção da impressão digital</string>
