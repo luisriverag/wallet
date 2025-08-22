@@ -6,7 +6,14 @@ import com.mycelium.bequant.remote.doRequest
 import com.mycelium.generated.giftbox.database.GiftboxCard
 import com.mycelium.generated.giftbox.database.GiftboxDB
 import com.mycelium.generated.giftbox.database.GiftboxProduct
-import com.mycelium.giftbox.client.models.*
+import com.mycelium.giftbox.client.models.CheckoutProductResponse
+import com.mycelium.giftbox.client.models.CreateOrderRequest
+import com.mycelium.giftbox.client.models.Order
+import com.mycelium.giftbox.client.models.OrderResponse
+import com.mycelium.giftbox.client.models.OrdersHistoryResponse
+import com.mycelium.giftbox.client.models.PriceResponse
+import com.mycelium.giftbox.client.models.ProductResponse
+import com.mycelium.giftbox.client.models.ProductsResponse
 import com.mycelium.giftbox.dateAdapter
 import com.mycelium.giftbox.listBigDecimalAdapter
 import com.mycelium.giftbox.model.Card
@@ -17,7 +24,10 @@ import com.mycelium.wapi.wallet.genericdb.Adapters
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import retrofit2.Response
-import java.util.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 class GiftboxApiRepository {
     private var lastOrderId = updateOrderId()
@@ -25,7 +35,7 @@ class GiftboxApiRepository {
     private val api = GiftboxApi.create()
     private val giftbxDB = GiftboxDB.invoke(
         AndroidSqliteDriver(GiftboxDB.Schema, WalletApplication.getInstance(), "giftbox.db"),
-        GiftboxCard.Adapter(dateAdapter),
+        GiftboxCard.Adapter(dateAdapter,dateAdapter),
         GiftboxProduct.Adapter(
             Adapters.listAdapter, Adapters.listAdapter,
             Adapters.bigDecimalAdapter, Adapters.bigDecimalAdapter,
@@ -42,6 +52,16 @@ class GiftboxApiRepository {
     private fun updateOrderId(): String {
         lastOrderId = UUID.randomUUID().toString()
         return lastOrderId
+    }
+
+    private fun parseActivateBy(activateBy: String?): Date? {
+        return activateBy?.let {
+            try {
+                SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(it)
+            } catch (e: Exception) {
+                null
+            }
+        }
     }
 
     fun getPrice(
@@ -197,13 +217,13 @@ class GiftboxApiRepository {
         orders?.forEach { order ->
             order.items?.forEach {
                 giftbxDB.giftboxCardQueries.updateCard(order.productCode, order.productName, order.productImg,
-                        order.currencyCode, it.amount, it.expiryDate, order.timestamp,
+                        order.currencyCode, it.amount, it.expiryDate, parseActivateBy(it.activateBy), order.timestamp,
                         order.clientOrderId ?: "", it.code ?: "",
                         it.deliveryUrl ?: "", it.pin ?: "")
                 if (giftbxDB.giftboxCardQueries.isCardUpdated().executeAsOne() == 0L) {
                     giftbxDB.giftboxCardQueries.insertCard(order.clientOrderId ?: "",
                             order.productCode, order.productName, order.productImg, order.currencyCode,
-                            it.amount, it.expiryDate, it.code ?: "", it.deliveryUrl ?: "",
+                            it.amount, it.expiryDate, it.code ?: "", parseActivateBy(it.activateBy), it.deliveryUrl ?: "",
                             it.pin ?: "", order.timestamp)
                 }
             }
@@ -223,11 +243,12 @@ class GiftboxApiRepository {
                                                                                 amount: String?,
                                                                                 expiryDate: String?,
                                                                                 code: String,
+                                                                                activateBy: Date?,
                                                                                 deliveryUrl: String,
                                                                                 pin: String,
                                                                                 timestamp: Date?,
                                                                                 redeemed: Boolean ->
-                Card(clientOrderId, productCode, productName, productImg, currencyCode, amount, expiryDate, code, deliveryUrl, pin, timestamp, redeemed)
+                Card(clientOrderId, productCode, productName, productImg, currencyCode, amount, expiryDate, code, activateBy, deliveryUrl, pin, timestamp, redeemed)
             }).executeAsList())
         }, successBlock = success, errorBlock = error, finallyBlock = finally)
     }

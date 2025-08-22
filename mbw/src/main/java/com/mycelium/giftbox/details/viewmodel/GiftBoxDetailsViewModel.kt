@@ -19,6 +19,8 @@ class GiftBoxDetailsViewModel(application: Application) : AndroidViewModel(appli
     val cardCode = MutableLiveData<String>("")
     val cardPin = MutableLiveData<String>("")
 
+    val activateBy = MutableLiveData<String>("")
+
     override val amount = MutableLiveData<String>()
     override val amountFiat = MutableLiveData<String>()
     override val minerFee = MutableLiveData<String>()
@@ -58,5 +60,7 @@ class GiftBoxDetailsViewModel(application: Application) : AndroidViewModel(appli
 
         cardCode.value = code.code
         cardPin.value = code.pin
+
+        activateBy.value = code.activateBy?.getDateTimeString(getApplication<Application>().resources) ?: ""
     }
 }

@@ -34,6 +34,7 @@ import com.squareup.otto.Subscribe
 class BalanceMasterFragment : Fragment() {
 
     private var binding: BalanceMasterFragmentBinding? = null
+    private val menuProvider = MenuImpl()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +54,19 @@ class BalanceMasterFragment : Fragment() {
         fragmentTransaction.replace(R.id.phFragmentFioBanner, newInstance(false))
         fragmentTransaction.replace(R.id.phFragmentBuySell, BuySellFragment())
         fragmentTransaction.commitAllowingStateLoss()
-        requireActivity().addMenuProvider(MenuImpl(), viewLifecycleOwner)
+
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if(binding == null) {
+            return
+        }
+        if (menuVisible) {
+            requireActivity().addMenuProvider(menuProvider, viewLifecycleOwner)
+        } else {
+            requireActivity().removeMenuProvider(menuProvider)
+        }
     }
 
     private fun defineAddressAccountView(
@@ -132,8 +145,8 @@ class BalanceMasterFragment : Fragment() {
         override fun onPrepareMenu(menu: Menu) {
             val mbwManager = MbwManager.getInstance(requireActivity())
             val account = mbwManager.selectedAccount
-            menu.findItem(R.id.miShowOutputs)
-                ?.setVisible(account.isActive && account !is AbstractEthERC20Account && account !is FioAccount)
+            menu.findItem(R.id.miShowOutputs)?.isVisible =
+                account.isActive && account !is AbstractEthERC20Account && account !is FioAccount
         }
 
         override fun onMenuItemSelected(menuItem: MenuItem): Boolean {

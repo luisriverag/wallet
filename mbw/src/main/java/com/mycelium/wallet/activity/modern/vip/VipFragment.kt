@@ -12,10 +12,12 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.ViewPager
+import com.mycelium.wallet.MbwManager
 import com.mycelium.wallet.R
+import com.mycelium.wallet.activity.modern.ModernMain.Companion.TAB_VIP
 import com.mycelium.wallet.databinding.FragmentVipBinding
-import kotlinx.coroutines.flow.collect
+import com.mycelium.wallet.event.PageSelectedEvent
+import com.squareup.otto.Subscribe
 
 class VipFragment : Fragment() {
 
@@ -34,7 +36,16 @@ class VipFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupInputs()
         setupObservers()
-        setupPageObserver()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        MbwManager.getEventBus().register(this)
+    }
+
+    override fun onStop() {
+        MbwManager.getEventBus().unregister(this)
+        super.onStop()
     }
 
     private fun setupInputs() {
@@ -52,21 +63,6 @@ class VipFragment : Fragment() {
             handleError(state.error)
             handleSuccess(state.isVip)
         }
-    }
-
-    private fun setupPageObserver() {
-        val pager = requireActivity().findViewById<ViewPager>(R.id.pager)
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageSelected(position: Int) {
-                if (position == VIP_FRAGMENT_POSITION) {
-                    binding.icon.playAnimation()
-                }
-            }
-
-            override fun onPageScrolled(p: Int, po: Float, pop: Int) {}
-
-            override fun onPageScrollStateChanged(state: Int) {}
-        })
     }
 
     private fun updateButtons(state: VipViewModel.State) {
@@ -129,7 +125,10 @@ class VipFragment : Fragment() {
         imm?.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
-    private companion object {
-        const val VIP_FRAGMENT_POSITION = 6
+    @Subscribe
+    fun pageSelectedEvent(event: PageSelectedEvent) {
+        if (event.tag == TAB_VIP) {
+            binding.icon.playAnimation()
+        }
     }
 }

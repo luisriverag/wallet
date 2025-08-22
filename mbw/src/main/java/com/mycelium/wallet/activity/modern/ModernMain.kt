@@ -9,6 +9,7 @@ import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.Log
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -16,8 +17,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.google.common.base.Preconditions
 import com.mycelium.giftbox.GiftBoxRootActivity
 import com.mycelium.net.ServerEndpointType
@@ -58,6 +62,7 @@ import com.mycelium.wallet.event.FeatureWarningsAvailable
 import com.mycelium.wallet.event.MalformedOutgoingTransactionsFound
 import com.mycelium.wallet.event.NetworkConnectionStateChanged
 import com.mycelium.wallet.event.NewWalletVersionAvailable
+import com.mycelium.wallet.event.PageSelectedEvent
 import com.mycelium.wallet.event.SyncFailed
 import com.mycelium.wallet.event.SyncStarted
 import com.mycelium.wallet.event.SyncStopped
@@ -120,7 +125,6 @@ class ModernMain : AppCompatActivity(), BackHandler {
         setContentView(ModernMainBinding.inflate(layoutInflater).apply {
             binding = this
         }.root)
-        binding.pagerTabs.setupWithViewPager(binding.pager, true)
         supportActionBar?.let {
             it.setDisplayShowTitleEnabled(false)
             it.setDisplayShowHomeEnabled(true)
@@ -128,7 +132,23 @@ class ModernMain : AppCompatActivity(), BackHandler {
         }
         window.setBackgroundDrawableResource(R.drawable.background_main)
 
-        mTabsAdapter = TabsAdapter(this, binding.pager, mbwManager)
+        mTabsAdapter = TabsAdapter(this, mbwManager)
+        binding.pager.adapter = mTabsAdapter
+        binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                // This ensures that any cached encryption key is flushed when we swipe to
+                // another tab
+                mbwManager.clearCachedEncryptionParameters()
+                // redraw menu - not working yet
+                ActivityCompat.invalidateOptionsMenu(this@ModernMain)
+                MbwManager.getEventBus()
+                    .post(PageSelectedEvent(position, mTabsAdapter?.getPageTag(position)))
+            }
+        })
+        TabLayoutMediator(binding.pagerTabs, binding.pager) { tab, position ->
+            tab.text = mTabsAdapter?.getPageTitle(position) //"OBJECT ${(position + 1)}"
+        }.attach()
         if (mediaFlowEnabled) {
             mNewsTab = binding.pagerTabs.newTab().setText(getString(R.string.media_flow)).setCustomView(R.layout.layout_exchange_tab)
             mTabsAdapter!!.addTab(mNewsTab!!, NewsFragment::class.java, null, TAB_NEWS)
@@ -164,7 +184,7 @@ class ModernMain : AppCompatActivity(), BackHandler {
         mTabsAdapter!!.addTab(binding.pagerTabs.newTab().setText(getString(R.string.tab_addresses)), AddressBookFragment::class.java,
                 addressBookConfig, TAB_ADDRESS_BOOK)
         addAdsTabs(binding.pagerTabs)
-        binding.pager.offscreenPageLimit = (mTabsAdapter?.count ?: 0) + 2
+        binding.pager.offscreenPageLimit = (mTabsAdapter?.itemCount ?: 0) + 2
         selectTab(intent.getStringExtra(TAB_KEY) ?: TAB_ACCOUNTS)
         _toaster = Toaster(this)
         checkTorState()
@@ -194,6 +214,7 @@ class ModernMain : AppCompatActivity(), BackHandler {
                 supportActionBar?.setIcon(icon)
             }
         }
+        addMenuProvider(MenuImpl())
         checkPushPermission({}, {
             ActivityCompat.requestPermissions(
                 this,
@@ -266,7 +287,7 @@ class ModernMain : AppCompatActivity(), BackHandler {
                     putSerializable("page", page)
                     putString("tag", tabTag)
                 }
-                if (0 <= tabIndex && tabIndex < mTabsAdapter!!.count) {
+                if (0 <= tabIndex && tabIndex < mTabsAdapter!!.itemCount) {
                     mTabsAdapter!!.addTab(tabIndex, newTab,
                             AdsFragment::class.java, adsBundle, tabTag)
                 } else {
@@ -395,23 +416,6 @@ class ModernMain : AppCompatActivity(), BackHandler {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.record_options_menu_global, menu)
-        inflater.inflate(R.menu.transaction_history_options_global, menu)
-        inflater.inflate(R.menu.main_activity_options_menu, menu)
-        addEnglishSetting(menu.findItem(R.id.miSettings))
-        inflater.inflate(R.menu.refresh, menu)
-        inflater.inflate(R.menu.addressbook_options_global, menu)
-        inflater.inflate(R.menu.verify_message, menu)
-        if (!(mbwManager.getWalletManager(false).getModuleById(FioModule.ID) as FioModule?)!!.getAllRegisteredFioNames().isEmpty()) {
-            inflater.inflate(R.menu.record_fio_options, menu)
-        }
-        inflater.inflate(R.menu.giftbox, menu)
-        inflater.inflate(R.menu.exchange_changelly2, menu)
-        return true
-    }
-
     private fun addEnglishSetting(settingsItem: MenuItem) {
         val displayed = resources.getString(R.string.settings)
         val settingsEn = Utils.loadEnglish(R.string.settings)
@@ -419,104 +423,6 @@ class ModernMain : AppCompatActivity(), BackHandler {
             settingsItem.title = settingsItem.title.toString() + " (" + settingsEn + ")"
         }
     }
-
-    // controlling the behavior here is the safe but slightly slower responding
-    // way of doing this.
-    // controlling the visibility from the individual fragments is a bug-ridden
-    // nightmare.
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val tabTag = mTabsAdapter!!.getPageTag(binding.pager.currentItem)
-        // at the moment, we allow to make backups multiple times
-        Preconditions.checkNotNull(menu.findItem(R.id.miBackup)).isVisible = true
-
-        // Add Record menu
-        val isAccountTab = TAB_ACCOUNTS == tabTag
-        val locked = mbwManager.isKeyManagementLocked
-        Preconditions.checkNotNull(menu.findItem(R.id.miAddRecord)).isVisible = isAccountTab && !locked
-        Preconditions.checkNotNull(menu.findItem(R.id.miAddRecordDuplicate)).isVisible = isAccountTab && !locked
-
-        // Lock menu
-        val hasPin = mbwManager.isPinProtected
-        Preconditions.checkNotNull(menu.findItem(R.id.miLockKeys)).isVisible = isAccountTab && !locked && hasPin
-
-        // Refresh menu
-        val isBalanceTab = TAB_BALANCE == tabTag
-        val isHistoryTab = TAB_HISTORY == tabTag
-        val isRequestsTab = TAB_FIO_REQUESTS == tabTag
-        refreshItem = Preconditions.checkNotNull(menu.findItem(R.id.miRefresh))
-        refreshItem?.isVisible = isBalanceTab || isHistoryTab || isRequestsTab || isAccountTab
-        setRefreshAnimation()
-        Preconditions.checkNotNull(menu.findItem(R.id.miRescanTransactions)).isVisible = isHistoryTab
-        val isAddressBook = TAB_ADDRESS_BOOK == tabTag
-        Preconditions.checkNotNull(menu.findItem(R.id.miAddAddress)).isVisible = isAddressBook
-        Preconditions.checkNotNull(menu.findItem(R.id.miGiftBox)).isVisible = true // isContentEnabled(GiftboxConstants.PARTNER_ID)
-        Preconditions.checkNotNull(menu.findItem(R.id.history)).isVisible = isContentEnabled(ChangellyConstants.PARTNER_ID_CHANGELLY)
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-            when (item.itemId) {
-                R.id.miColdStorage -> {
-                    InstantWalletActivity.callMe(this)
-                    true
-                }
-                R.id.miSettings -> {
-                    val intent = Intent(this, SettingsActivity::class.java)
-                    startActivityForResult(intent, REQUEST_SETTING_CHANGED)
-                    true
-                }
-                R.id.miBackup -> {
-                    Utils.pinProtectedWordlistBackup(this)
-                    true
-                }
-                R.id.miRefresh -> {
-                    // default only sync the current account
-                    var syncMode = SyncMode.NORMAL_FORCED
-                    // every 5th manual refresh make a full scan
-                    if (counter == 4) {
-                        syncMode = SyncMode.FULL_SYNC_CURRENT_ACCOUNT_FORCED
-                        counter = 0
-                    } else if (TAB_ACCOUNTS == mTabsAdapter!!.getPageTag(binding.pager.currentItem)) {
-                        // if we are in the accounts tab, sync all accounts if the users forces a sync
-                        syncMode = SyncMode.NORMAL_ALL_ACCOUNTS_FORCED
-                        counter++
-                    }
-                    if (!startSynchronization(syncMode)) {
-                        binding.pager.postDelayed({ setRefreshAnimation() }, TimeUnit.SECONDS.toMillis(1))
-                    }
-
-                    // also fetch a new exchange rate, if necessary
-                    mbwManager.exchangeRateManager.requestOptionalRefresh()
-                    showRefresh() // without this call sometime user not see click feedback
-                    true
-                }
-                R.id.miRescanTransactions -> {
-                    mbwManager.selectedAccount.dropCachedData()
-                    startSynchronization(SyncMode.FULL_SYNC_CURRENT_ACCOUNT_FORCED)
-                    true
-                }
-                R.id.miVerifyMessage -> {
-                    startActivity(Intent(this, MessageVerifyActivity::class.java))
-                    true
-                }
-                R.id.miMyFIONames -> {
-                    startActivity(Intent(this, AccountMappingActivity::class.java))
-                    true
-                }
-                R.id.miFIORequests -> {
-                    selectTab(TAB_FIO_REQUESTS)
-                    true
-                }
-                R.id.miGiftBox -> {
-                    GiftBoxRootActivity.start(this)
-                    true
-                }
-                R.id.history -> {
-                    HistoryFragment().show(supportFragmentManager, ExchangeFragment.TAG_HISTORY)
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
-            }
 
     private fun startSynchronization(syncMode: SyncMode): Boolean {
         val account = mbwManager.selectedAccount
@@ -640,6 +546,108 @@ class ModernMain : AppCompatActivity(), BackHandler {
         backListeners.remove(listener)
     }
 
+    internal inner class MenuImpl : MenuProvider {
+        override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
+            inflater.inflate(R.menu.main_activity_options_menu, menu)
+            addEnglishSetting(menu.findItem(R.id.miSettings))
+            inflater.inflate(R.menu.refresh, menu)
+            inflater.inflate(R.menu.verify_message, menu)
+            if (!(mbwManager.getWalletManager(false)
+                    .getModuleById(FioModule.ID) as FioModule?)!!.getAllRegisteredFioNames()
+                    .isEmpty()
+            ) {
+                inflater.inflate(R.menu.record_fio_options, menu)
+            }
+            inflater.inflate(R.menu.giftbox, menu)
+        }
+
+        override fun onPrepareMenu(menu: Menu) {
+            super.onPrepareMenu(menu)
+            val tabTag = mTabsAdapter!!.getPageTag(binding.pager.currentItem)
+            // at the moment, we allow to make backups multiple times
+            menu.findItem(R.id.miBackup)?.isVisible = true
+            refreshItem = Preconditions.checkNotNull(menu.findItem(R.id.miRefresh))
+            refreshItem?.isVisible =
+                tabTag in arrayOf(TAB_BALANCE, TAB_HISTORY, TAB_FIO_REQUESTS, TAB_ACCOUNTS)
+            setRefreshAnimation()
+            menu.findItem(R.id.miGiftBox)?.isVisible =
+                true // isContentEnabled(GiftboxConstants.PARTNER_ID)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+            when (menuItem.itemId) {
+                R.id.miColdStorage -> {
+                    InstantWalletActivity.callMe(this@ModernMain)
+                    true
+                }
+
+                R.id.miSettings -> {
+                    val intent = Intent(this@ModernMain, SettingsActivity::class.java)
+                    startActivityForResult(intent, REQUEST_SETTING_CHANGED)
+                    true
+                }
+
+                R.id.miBackup -> {
+                    Utils.pinProtectedWordlistBackup(this@ModernMain)
+                    true
+                }
+
+
+                R.id.miRefresh -> {
+                    // default only sync the current account
+                    var syncMode = SyncMode.NORMAL_FORCED
+                    // every 5th manual refresh make a full scan
+                    if (counter == 4) {
+                        syncMode = SyncMode.FULL_SYNC_CURRENT_ACCOUNT_FORCED
+                        counter = 0
+                    } else if (TAB_ACCOUNTS == mTabsAdapter!!.getPageTag(binding.pager.currentItem)) {
+                        // if we are in the accounts tab, sync all accounts if the users forces a sync
+                        syncMode = SyncMode.NORMAL_ALL_ACCOUNTS_FORCED
+                        counter++
+                    }
+                    if (!startSynchronization(syncMode)) {
+                        binding.pager.postDelayed(
+                            { setRefreshAnimation() },
+                            TimeUnit.SECONDS.toMillis(1)
+                        )
+                    }
+
+                    // also fetch a new exchange rate, if necessary
+                    mbwManager.exchangeRateManager.requestOptionalRefresh()
+                    showRefresh() // without this call sometime user not see click feedback
+                    true
+                }
+
+                R.id.miRescanTransactions -> {
+                    mbwManager.selectedAccount.dropCachedData()
+                    startSynchronization(SyncMode.FULL_SYNC_CURRENT_ACCOUNT_FORCED)
+                    true
+                }
+
+                R.id.miVerifyMessage -> {
+                    startActivity(Intent(this@ModernMain, MessageVerifyActivity::class.java))
+                    true
+                }
+
+                R.id.miMyFIONames -> {
+                    startActivity(Intent(this@ModernMain, AccountMappingActivity::class.java))
+                    true
+                }
+
+                R.id.miFIORequests -> {
+                    selectTab(TAB_FIO_REQUESTS)
+                    true
+                }
+
+                R.id.miGiftBox -> {
+                    GiftBoxRootActivity.start(this@ModernMain)
+                    true
+                }
+
+                else -> false
+            }
+    }
+
     companion object {
         private const val REQUEST_CODE_NOTIFICATION = 1000223
         private const val TAB_NEWS = "tab_news"
@@ -647,7 +655,7 @@ class ModernMain : AppCompatActivity(), BackHandler {
         const val TAB_BALANCE = "tab_balance"
         const val TAB_EXCHANGE = "tab_exchange"
         private const val TAB_HISTORY = "tab_history"
-        private const val TAB_VIP = "tab_vip"
+        const val TAB_VIP = "tab_vip"
         const val TAB_FIO_REQUESTS = "tab_fio_requests"
         private const val TAB_ADS = "tab_ads"
         private const val TAB_RECOMMENDATIONS = "tab_recommendations"

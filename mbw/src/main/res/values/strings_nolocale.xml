@@ -4,6 +4,7 @@
         tools:ignore="MissingTranslation">
 
     <string name="contact_email">support@mycelium.com</string>
+    <string name="contact_giftcard_email">support@flipgift.io</string>
     <string name="btc">BTC</string>
     <string name="bullet">&#8226;</string>
     <string name="question_mark">\?</string>

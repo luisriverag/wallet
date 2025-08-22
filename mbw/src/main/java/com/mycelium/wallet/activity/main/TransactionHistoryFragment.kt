@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -83,10 +84,9 @@ class TransactionHistoryFragment : Fragment() {
     private var adapter: TransactionHistoryAdapter? = null
     private val model: TransactionHistoryModel by viewModels()
     private var binding: MainTransactionHistoryViewBinding? = null
-    val toaster by lazy { Toaster(requireActivity()) }
+    private val menuProvider = MenuImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
         // cache the addressbook for faster lookup
         model.cacheAddressBook()
@@ -129,6 +129,18 @@ class TransactionHistoryFragment : Fragment() {
                 model.mbwManager.getWalletManager(false)
                         .startSynchronization(SyncMode.NORMAL_FORCED, listOf(account))
             }
+        }
+    }
+
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+        if (binding == null) {
+            return
+        }
+        if (menuVisible) {
+            requireActivity().addMenuProvider(menuProvider, viewLifecycleOwner)
+        } else {
+            requireActivity().removeMenuProvider(menuProvider)
         }
     }
 
@@ -260,22 +272,6 @@ class TransactionHistoryFragment : Fragment() {
         currentActionMode?.finish()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        if (adapter?.count ?: 0 > 0) {
-            inflater.inflate(R.menu.export_history, menu)
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-            when (item.itemId) {
-                R.id.miExportHistory -> {
-                    shareTransactionHistory()
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
-            }
-
     private inner class TransactionHistoryAdapter(context: Context?,
                                                   transactions: List<TransactionSummary?>?,
                                                   private val fioMetadataMap: Map<String, FIOOBTransaction>)
@@ -331,7 +327,7 @@ class TransactionHistoryFragment : Fragment() {
                     //I set default values
                     private fun updateActionBar(actionMode: ActionMode, menu: Menu) {
                         Preconditions.checkNotNull(menu.findItem(R.id.miShowDetails))
-                        Preconditions.checkNotNull(menu.findItem(R.id.miAddToAddressBook)).isVisible = !record.isIncoming && record.destinationAddresses.isNotEmpty()
+                        Preconditions.checkNotNull(menu.findItem(R.id.miAddToAddressBook)).isVisible = !record.isIncoming && record.destinationAddresses.size > 0
                         if (model.account.value is Bip44BCHAccount || model.account.value is SingleAddressBCHAccount
                                 || model.account.value is AbstractEthERC20Account || model.account.value is FioAccount) {
                             Preconditions.checkNotNull(menu.findItem(R.id.miCancelTransaction)).isVisible = false
@@ -369,7 +365,7 @@ class TransactionHistoryFragment : Fragment() {
                                 if (model.account.value is ColuAccount) {
                                     defaultName = (model.account.value as ColuAccount).coluLabel
                                 }
-                                if(record.destinationAddresses.isNotEmpty()) {
+                                if(record.destinationAddresses.size > 0) {
                                     val address = record.destinationAddresses[0]
                                     EnterAddressLabelUtil.enterAddressLabel(requireContext(), model.storage,
                                             address, defaultName, addressLabelChanged)
@@ -384,7 +380,7 @@ class TransactionHistoryFragment : Fragment() {
                                         if (okay) {
                                             Utils.showSimpleMessageDialog(context, _context.getString(R.string.remove_queued_transaction_hint))
                                         } else {
-                                            toaster.toast(_context.getString(R.string.remove_queued_transaction_error), false)
+                                            Toaster(requireActivity()).toast(_context.getString(R.string.remove_queued_transaction_error), false)
                                         }
                                         finishActionMode()
                                     }
@@ -410,17 +406,8 @@ class TransactionHistoryFragment : Fragment() {
                                     .setTitle(_context.getString(R.string.rebroadcast_transaction_title))
                                     .setMessage(_context.getString(R.string.description_rebroadcast_transaction))
                                     .setPositiveButton(R.string.yes) { dialog, _ ->
-                                        val account = model.account.value
-                                        val tx = account?.getTx(record.id)
-                                        if(account != null && tx != null) {
-                                            BroadcastDialog.create(
-                                                account,
-                                                false,
-                                                tx
-                                            ).show(requireFragmentManager(), "broadcast")
-                                        } else {
-                                            toaster.toast(R.string.vip_exchange_unexpected_alert_title, false)
-                                        }
+                                        BroadcastDialog.create(model.account.value!!, false, record)
+                                                .show(requireFragmentManager(), "broadcast")
                                         dialog.dismiss()
                                     }
                                     .setNegativeButton(R.string.no) { dialog, which -> dialog.dismiss() }
@@ -539,20 +526,20 @@ class TransactionHistoryFragment : Fragment() {
         val txFee = transaction!!.inputs.map { it.value.valueAsLong }.sum() -
                 transaction.outputs.map { it.value.valueAsLong }.sum()
         if (txFee * 1000 / transaction.rawSize >= feePerKB) {
-            toaster.toast(resources.getString(R.string.bumping_not_necessary), false)
+            Toaster(requireActivity()).toast(resources.getString(R.string.bumping_not_necessary), false)
             return null
         }
         try {
             return (model.account.value as AbstractBtcAccount).createUnsignedCPFPTransaction(txid, feePerKB, txFee)
         } catch (e: InsufficientBtcException) {
-            toaster.toast(R.string.insufficient_funds, false)
+            Toaster(requireActivity()).toast(R.string.insufficient_funds, false)
         } catch (e: UnableToBuildTransactionException) {
             val message = when (e.code) {
                 BuildError.NO_UTXO -> resources.getString(R.string.no_utxo)
                 BuildError.PARENT_NEEDS_NO_BOOSTING -> resources.getString(R.string.parent_needs_no_boosting)
                 else -> resources.getString(R.string.unable_to_build_tx, e.message)
             }
-            toaster.toast(message, false)
+            Toaster(requireActivity()).toast(message, false)
         }
         return null
     }
@@ -589,12 +576,45 @@ class TransactionHistoryFragment : Fragment() {
                         startActivity(Intent.createChooser(intent, resources.getString(R.string.share_transaction_history)))
                     }
         } catch (e: IOException) {
-            toaster.toast("Export failed. Check your logs", false)
+            Toaster(requireActivity()).toast("Export failed. Check your logs", false)
             e.printStackTrace()
         } catch (e: PackageManager.NameNotFoundException) {
-            toaster.toast("Export failed. Check your logs", false)
+            Toaster(requireActivity()).toast("Export failed. Check your logs", false)
             e.printStackTrace()
         }
+    }
+
+    private fun startSynchronization(syncMode: SyncMode): Boolean {
+        val account = model.mbwManager.selectedAccount
+        val started = model.mbwManager.getWalletManager(false)
+            .startSynchronization(syncMode, listOf(account))
+        if (!started) {
+            MbwManager.getEventBus().post(SyncFailed(account.id))
+        }
+        return started
+    }
+
+    internal inner class MenuImpl : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.transaction_history_options_global, menu)
+            menuInflater.inflate(R.menu.export_history, menu)
+        }
+
+        override fun onPrepareMenu(menu: Menu) {
+            super.onPrepareMenu(menu)
+            menu.findItem(R.id.miExportHistory).isVisible = (adapter?.count ?: 0) > 0
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+            when (menuItem.itemId) {
+                R.id.miRescanTransactions -> {
+                    model.mbwManager.selectedAccount.dropCachedData()
+                    startSynchronization(SyncMode.FULL_SYNC_CURRENT_ACCOUNT_FORCED)
+                    true
+                }
+
+                else -> false
+            }
     }
 
     companion object {

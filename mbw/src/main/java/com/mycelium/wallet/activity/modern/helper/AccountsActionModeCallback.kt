@@ -15,7 +15,6 @@ import com.mycelium.wallet.activity.modern.Toaster
 import com.mycelium.wallet.activity.modern.UnspentOutputsActivity
 import com.mycelium.wallet.activity.modern.event.SelectTab
 import com.mycelium.wallet.activity.modern.model.accounts.AccountViewModel.Companion.showBackupMissingWarning
-import com.mycelium.wapi.wallet.Address
 import com.mycelium.wapi.wallet.AesKeyCipher
 import com.mycelium.wapi.wallet.ExportableAccount
 import com.mycelium.wapi.wallet.KeyCipher.InvalidKeyCipher
@@ -26,7 +25,7 @@ class AccountsActionModeCallback(
     val context: Context,
     val menus: List<Int>,
     val mbwManager: MbwManager,
-    val account: WalletAccount<Address>,
+    val account: WalletAccount<*>,
     val runPinProtected: (Runnable) -> Unit,
     val actionHandler: (Int) -> Boolean,
     val destroyActionMode: () -> Unit

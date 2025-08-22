@@ -305,7 +305,7 @@ class GiftBoxBuyResultFragment : Fragment() {
                     startActivity(
                         Intent.createChooser(
                             Intent(Intent.ACTION_SENDTO)
-                                .setData(Uri.parse("mailto:support@mycelium.com")),
+                                .setData(Uri.parse("mailto:${getString(R.string.contact_giftcard_email)}")),
                             getString(R.string.send_mail)
                         )
                     )

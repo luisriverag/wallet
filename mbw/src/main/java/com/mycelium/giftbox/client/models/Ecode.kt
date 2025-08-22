@@ -22,6 +22,7 @@ import kotlinx.android.parcel.Parcelize
  * @param code
  * @param deliveryUrl
  * @param expiryDate
+ * @param activateBy
  * @param pin
  */
 @Parcelize
@@ -35,6 +36,8 @@ data class Ecode(
     var deliveryUrl: String? = null,
     @JsonProperty("expiry_date")
     var expiryDate: String? = null,
+    @JsonProperty("activate_by")
+    var activateBy: String? = null,
     @JsonProperty("pin")
     var pin: String? = null
 ) : Parcelable

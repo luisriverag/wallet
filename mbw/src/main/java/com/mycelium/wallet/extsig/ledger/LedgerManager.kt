@@ -41,9 +41,6 @@ import com.mycelium.wallet.Constants
 import com.mycelium.wallet.R
 import com.mycelium.wallet.Utils
 import com.mycelium.wallet.activity.util.AbstractAccountScanManager
-import com.mycelium.wallet.extsig.ledger.LedgerManager.On2FaRequest
-import com.mycelium.wallet.extsig.ledger.LedgerManager.OnPinRequest
-import com.mycelium.wallet.extsig.ledger.LedgerManager.OnShowTransactionVerification
 import com.mycelium.wapi.model.TransactionEx
 import com.mycelium.wapi.wallet.AccountScanManager
 import com.mycelium.wapi.wallet.WalletManager
@@ -56,8 +53,6 @@ import com.squareup.otto.Bus
 import nordpol.android.OnDiscoveredTagListener
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
-import java.util.ArrayList
 import java.util.UUID
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -376,18 +371,14 @@ open class LedgerManager(context: Context, network: NetworkParameters, eventBus:
         val toSignWith = signingRequest?.publicKey?.toAddress(network, derivationType.addressType)!!
         val addressId = forAccount.getAddressId(toSignWith)
         val keyPath = String.format(
-            commonPath + addressId.get()!![0] + "/" + addressId.get()!![1],
+            commonPath + addressId.get()[0] + "/" + addressId.get()[1],
             derivationType.purpose.toString()
         )
         return dongle!!.untrustedHashSign(keyPath, txPin)
     }
 
     private fun requestConfirmation(output: BTChipOutput): String {
-        mainThreadHandler.post(object : Runnable {
-            override fun run() {
-                eventBus.post(On2FaRequest(output))
-            }
-        })
+        mainThreadHandler.post { eventBus.post(On2FaRequest(output)) }
         val txPin = try {
             // wait for the user to enter the pin
             tx2FaEntry.take()
@@ -524,7 +515,7 @@ open class LedgerManager(context: Context, network: NetworkParameters, eventBus:
         for (output in unsigned.outputs) {
             val toAddress = output.script.getAddress(network)
             val addressId = forAccount.getAddressId(toAddress)
-            if (!(addressId.isPresent && addressId.get()!![0] == 1)) {
+            if (!(addressId.isPresent && addressId.get()[0] == 1)) {
                 // this output goes to a foreign address (addressId[0]==1 means its internal change)
                 outputAddress = toAddress.toString()
             }
@@ -547,7 +538,7 @@ open class LedgerManager(context: Context, network: NetworkParameters, eventBus:
         for (output in unsigned.outputs) {
             val toAddress = output.script.getAddress(network)
             val addressId = forAccount.getAddressId(toAddress)
-            if (!(addressId.isPresent && addressId.get()!![0] == 1)) {
+            if (!(addressId.isPresent && addressId.get()[0] == 1)) {
                 // this output goes to a foreign address (addressId[0]==1 means its internal change)
                 totalSending += output.value
             }
@@ -632,14 +623,12 @@ open class LedgerManager(context: Context, network: NetworkParameters, eventBus:
             }
         }
         val connectResult =
-            getTransport()!!.connect(context, object : BTChipTransportFactoryCallback {
-                override fun onConnected(success: Boolean) {
-                    try {
-                        waitConnected.put(success)
-                    } catch (_: InterruptedException) {
-                    }
+            getTransport()!!.connect(context) { success ->
+                try {
+                    waitConnected.put(success)
+                } catch (_: InterruptedException) {
                 }
-            })
+            }
         if (!connectResult) {
             return false
         }
