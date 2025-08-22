@@ -277,7 +277,7 @@ class GiftBoxBuyResultFragment : Fragment() {
                 binding?.orderScheme?.line1?.setBackgroundResource(R.drawable.line_dash_gray)
                 binding?.orderScheme?.paymentTitle?.text = getString(R.string.failed)
                 binding?.orderScheme?.paymentTitle?.setTextColor(resources.getColor(R.color.sender_recyclerview_background_red))
-                binding?.orderScheme?.paymentText?.text = getString(R.string.giftbox_failed_text)
+                binding?.orderScheme?.paymentText?.text = getString(R.string.giftbox_failed_text, getString(R.string.contact_giftcard_email))
                 binding?.orderScheme?.paymentIcon?.setImageResource(R.drawable.ic_bequant_clear_24)
                 binding?.orderScheme?.paymentIcon?.background = null
                 binding?.orderScheme?.line2?.setBackgroundResource(R.drawable.line_dash_gray)
