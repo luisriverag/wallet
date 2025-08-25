@@ -193,11 +193,16 @@ import com.mycelium.wapi.wallet.fio.coins.FIOToken;
 import com.mycelium.wapi.wallet.genericdb.AccountContextsBacking;
 import com.mycelium.wapi.wallet.genericdb.AdaptersKt;
 import com.mycelium.wapi.wallet.genericdb.Backing;
+import com.mycelium.wapi.wallet.genericdb.FeeEstimationsBacking;
 import com.mycelium.wapi.wallet.genericdb.InMemoryAccountContextsBacking;
 import com.mycelium.wapi.wallet.manager.Config;
+import com.mycelium.wapi.wallet.manager.FeeEstimations;
 import com.mycelium.wapi.wallet.manager.WalletListener;
 import com.mycelium.wapi.wallet.masterseed.MasterSeedManager;
+import com.mycelium.wapi.wallet.providers.BtcFeeProvider;
+import com.mycelium.wapi.wallet.providers.EthFeeProvider;
 import com.mycelium.wapi.wallet.providers.FeeProvider;
+import com.mycelium.wapi.wallet.providers.FioFeeProvider;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver;
@@ -769,8 +774,7 @@ public class MbwManager {
 
         masterSeedManager = new MasterSeedManager(secureKeyValueStore);
         final WalletManager walletManager = new WalletManager(environment.getNetwork(),
-                _wapi, btcvWapi,
-                currenciesSettingsMap, walletDB);
+                _wapi, currenciesSettingsMap);
 
         ExternalSignatureProviderProxy externalSignatureProviderProxy = new ExternalSignatureProviderProxy(
                 getTrezorManager(),
@@ -801,6 +805,9 @@ public class MbwManager {
             }
         };
 
+        FeeEstimationsBacking feeBacking = new FeeEstimationsBacking(walletDB);
+        boolean isTestnet = networkParameters.isTestnet();
+
         AccountEventManager accountEventManager = new AccountEventManager(walletManager);
         walletManager.add(new BitcoinHDModule(backing, secureKeyValueStore, networkParameters, _wapi, (BTCSettings) currenciesSettingsMap.get(BitcoinHDModule.ID), getMetadataStorage(),
                 externalSignatureProviderProxy, migrationProgressTracker, accountEventManager));
@@ -810,6 +817,7 @@ public class MbwManager {
                 migrationProgressTracker, accountEventManager);
 
         walletManager.add(saModule);
+        walletManager.getFeeEstimations().addProvider(new BtcFeeProvider(isTestnet, _wapi, feeBacking));
 
         ColuClient coluClient = new ColuClient(networkParameters, BuildConfig.ColoredCoinsApiURLs, BuildConfig.ColuBlockExplorerApiURLs, socketFactory);
         walletManager.add(new ColuModule(networkParameters, new PublicPrivateKeyStore(coluSecureKeyValueStore)
@@ -822,6 +830,7 @@ public class MbwManager {
         EthereumModule ethereumModule = new EthereumModule(secureKeyValueStore, ethBacking, walletDB,
                 ethBlockchainService, networkParameters, getMetadataStorage(), accountListener);
         walletManager.add(ethereumModule);
+        walletManager.getFeeEstimations().addProvider(new EthFeeProvider(isTestnet, ethBlockchainService, feeBacking));
 
         walletManager.add(new ERC20Module(secureKeyValueStore, new ERC20Backing(db, genericBacking), walletDB,
                 ethBlockchainService, networkParameters, getMetadataStorage(), accountListener, ethereumModule));
@@ -830,6 +839,7 @@ public class MbwManager {
                 secureKeyValueStore, new FioBacking(db, genericBacking), walletDB, networkParameters, getMetadataStorage(),
                 new FioKeyManager(new MasterSeedManager(secureKeyValueStore), secureKeyValueStore), accountListener, walletManager, configuration.getFioTpid());
         walletManager.add(fioModule);
+        walletManager.getFeeEstimations().addProvider(new FioFeeProvider(isTestnet));
 
         BitcoinVaultHDBacking bitcoinVaultBacking = new BitcoinVaultHDBacking(db, genericBacking);
         walletManager.add(new BitcoinVaultHDModule(bitcoinVaultBacking, secureKeyValueStore,
@@ -885,7 +895,7 @@ public class MbwManager {
         SecureKeyValueStore secureKeyValueStore = new SecureKeyValueStore(backing, new AndroidRandomSource());
 
         // Create and return wallet manager
-        WalletManager walletManager = new WalletManager(environment.getNetwork(), _wapi, btcvWapi, currenciesSettingsMap, db);
+        WalletManager walletManager = new WalletManager(environment.getNetwork(), _wapi, currenciesSettingsMap);
         walletManager.setIsNetworkConnected(Utils.isConnected(_applicationContext));
         walletManager.setWalletListener(new SyncEventsListener());
 

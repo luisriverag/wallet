@@ -1,31 +1,32 @@
 package com.mycelium.wapi.wallet
 
 import com.mrd.bitlib.model.NetworkParameters
-import com.mycelium.generated.wallet.database.WalletDB
 import com.mycelium.wapi.api.Wapi
 import com.mycelium.wapi.wallet.coins.AssetInfo
 import com.mycelium.wapi.wallet.coins.CryptoCurrency
 import com.mycelium.wapi.wallet.colu.coins.ColuMain
 import com.mycelium.wapi.wallet.erc20.coins.ERC20Token
-import com.mycelium.wapi.wallet.genericdb.FeeEstimationsBacking
-import com.mycelium.wapi.wallet.manager.*
-import com.mycelium.wapi.wallet.providers.*
-import java.util.*
+import com.mycelium.wapi.wallet.manager.Config
+import com.mycelium.wapi.wallet.manager.FeeEstimations
+import com.mycelium.wapi.wallet.manager.State
+import com.mycelium.wapi.wallet.manager.Synchronizer
+import com.mycelium.wapi.wallet.manager.WalletListener
+import com.mycelium.wapi.wallet.manager.WalletModule
+import java.util.LinkedList
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.logging.Level
 import java.util.logging.Logger
-import kotlinx.coroutines.sync.Mutex
 
 class WalletManager
 @JvmOverloads
 constructor(val network: NetworkParameters,
             val wapi: Wapi,
-            val btcvWapi: Wapi,
             private var currencySettingsMap: HashMap<String, CurrencySettings>,
             @JvmField
-            var accountScanManager: AccountScanManager? = null,
-            private val walletDB: WalletDB) {
+            var accountScanManager: AccountScanManager? = null
+) {
     private val accounts = ConcurrentHashMap<UUID, WalletAccount<*>>()
     private val walletModules = mutableMapOf<String, WalletModule>()
     private val _observers = LinkedList<Observer>()
@@ -89,13 +90,6 @@ constructor(val network: NetworkParameters,
                 accounts[it.id] = it
             }
         }
-
-        val backing = FeeEstimationsBacking(walletDB)
-        feeEstimations.addProvider(EthFeeProvider(network.isTestnet, backing))
-        feeEstimations.addProvider(BtcFeeProvider(network.isTestnet, wapi, backing))
-//        feeEstimations.addProvider(ColuFeeProvider(network.isTestnet, wapi, backing))
-        feeEstimations.addProvider(BtcvFeeProvider(network.isTestnet, btcvWapi, backing))
-        feeEstimations.addProvider(FioFeeProvider(network.isTestnet))
     }
 
     fun getAccountIds(): List<UUID> = accounts.keys().toList()
