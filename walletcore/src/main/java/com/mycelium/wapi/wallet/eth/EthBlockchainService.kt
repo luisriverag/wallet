@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import java.io.IOException
+import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -90,6 +91,11 @@ class EthBlockchainService(private var endpoints: List<HttpEndpoint>)
         } else {
             fetchTransactions(address, contractAddress)
         }
+    }
+
+    fun feeEstimation(block: Int): FeeResult {
+        val urlString = "${endpoints.random()}/api/v2/estimatefee/$block"
+        return mapper.readValue(URL(urlString), FeeResult::class.java)
     }
 
     override fun serverListChanged(newEndpoints: Array<HttpEndpoint>) {
@@ -207,6 +213,10 @@ class TokenTransfer(
 
     override fun toString() = "{'from':$from,'to':$to,'token':${token()},'name':$name,'value':$value}"
 }
+
+data class FeeResult(
+    val result: BigDecimal = BigDecimal.ZERO
+)
 
 private class EthereumSpecific {
     val nonce: BigInteger = BigInteger.ZERO

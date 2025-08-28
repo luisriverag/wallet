@@ -1,7 +1,6 @@
 package com.mycelium.giftbox.purchase
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -277,7 +277,7 @@ class GiftBoxBuyResultFragment : Fragment() {
                 binding?.orderScheme?.line1?.setBackgroundResource(R.drawable.line_dash_gray)
                 binding?.orderScheme?.paymentTitle?.text = getString(R.string.failed)
                 binding?.orderScheme?.paymentTitle?.setTextColor(resources.getColor(R.color.sender_recyclerview_background_red))
-                binding?.orderScheme?.paymentText?.text = getString(R.string.giftbox_failed_text)
+                binding?.orderScheme?.paymentText?.text = getString(R.string.giftbox_failed_text, getString(R.string.contact_giftcard_email))
                 binding?.orderScheme?.paymentIcon?.setImageResource(R.drawable.ic_bequant_clear_24)
                 binding?.orderScheme?.paymentIcon?.background = null
                 binding?.orderScheme?.line2?.setBackgroundResource(R.drawable.line_dash_gray)
@@ -300,12 +300,12 @@ class GiftBoxBuyResultFragment : Fragment() {
                 binding?.orderScheme?.paymentTitle?.text = getString(R.string.failed)
                 binding?.orderScheme?.paymentTitle?.setTextColor(resources.getColor(R.color.sender_recyclerview_background_red))
                 binding?.orderScheme?.paymentText?.text =
-                    Html.fromHtml(getString(R.string.giftbox_expired_text))
+                    Html.fromHtml(getString(R.string.giftbox_expired_text, getString(R.string.contact_giftcard_email)))
                 binding?.orderScheme?.paymentText?.setOnClickListener {
                     startActivity(
                         Intent.createChooser(
                             Intent(Intent.ACTION_SENDTO)
-                                .setData(Uri.parse("mailto:${getString(R.string.contact_giftcard_email)}")),
+                                .setData("mailto:${getString(R.string.contact_giftcard_email)}".toUri()),
                             getString(R.string.send_mail)
                         )
                     )

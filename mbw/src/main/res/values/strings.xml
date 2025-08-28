@@ -1687,7 +1687,7 @@ All new bitcoins, mined by the pool, are proportionally distributed among RMC bi
     <string name="success1">Success</string>
     <string name="gift_card_ready">Your Gift card is ready! Gift card download link and redeem instructions are in <u>My Gift cards</u>.</string>
     <string name="return_to_payment">Back to Orders</string>
-    <string name="giftbox_failed_text">No worries, your funds are safe. Unfortunately, the shop couldn’t issue the card due to technical difficulties. Please contact us at @string/contact_giftcard_email for assistance.</string>
+    <string name="giftbox_failed_text">No worries, your funds are safe. Unfortunately, the shop couldn’t issue the card due to technical difficulties. Please contact us at %s for assistance.</string>
     <string name="card_value1">Card value</string>
     <string name="no_results_found_for_s"><![CDATA[No results found for \"<font color="#ffffff">%s</font>\".<br/>Please check the spelling and try again.]]></string>
     <string name="no_stores_found">NO STORES FOUND</string>
@@ -1801,7 +1801,7 @@ All new bitcoins, mined by the pool, are proportionally distributed among RMC bi
     <string name="send_fee_hint"><b>ATTENTION.</b> Transactions with low priority miner fee may never be confirmed or confirmed in many hours or even days. Don\'t choose low priority if you don\'t understand how bitcoin network works.</string>
     <string name="hours_or_more">%s or more</string>
     <string name="russia">Russia</string>
-    <string name="giftbox_expired_text"><![CDATA[The order expired. Please contact the support - <font color="#4583de">@string/contact_giftcard_email</font>]]></string>
+    <string name="giftbox_expired_text"><![CDATA[The order expired. Please contact the support - <font color="#4583de">%s</font>]]></string>
     <string name="fingerprint_detection_failed">Fingerprint detection failed</string>
     <string name="fingerprint_not_available">Fingerprint not available</string>
     <string name="unlock_label_fingerprint">Proceed using fingerprint</string>

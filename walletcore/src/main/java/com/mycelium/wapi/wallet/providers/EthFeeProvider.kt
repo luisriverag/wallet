@@ -1,21 +1,22 @@
 package com.mycelium.wapi.wallet.providers
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.mycelium.wapi.wallet.FeeEstimationsGeneric
 import com.mycelium.wapi.wallet.coins.Value
+import com.mycelium.wapi.wallet.eth.EthBlockchainService
 import com.mycelium.wapi.wallet.eth.coins.EthMain
 import com.mycelium.wapi.wallet.eth.coins.EthTest
 import com.mycelium.wapi.wallet.genericdb.FeeEstimationsBacking
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.math.BigInteger
-import java.net.URL
 
 
-class EthFeeProvider(testnet: Boolean, private val feeBacking: FeeEstimationsBacking) :
-    FeeProvider {
+class EthFeeProvider(
+    testnet: Boolean,
+    private val service: EthBlockchainService,
+    private val feeBacking: FeeEstimationsBacking
+) : FeeProvider {
 
     override val coinType = if (testnet) {
         EthTest
@@ -43,22 +44,19 @@ class EthFeeProvider(testnet: Boolean, private val feeBacking: FeeEstimationsBac
         }
     }
 
+
     private fun getGasPriceEstimates(): FeeEstimationsGeneric {
-        val mapper =
-            ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        return mapper.readValue(
-            URL(GAS_PRICE_ESTIMATES_ADDRESS).readText(),
-            GasPriceEstimates::class.java
+        val low = service.feeEstimation(PriceLevelSpeed.SAFE_LOW.block)
+        val economy = service.feeEstimation(PriceLevelSpeed.AVERAGE.block)
+        val fast = service.feeEstimation(PriceLevelSpeed.FAST.block)
+        val fastest = service.feeEstimation(PriceLevelSpeed.FASTEST.block)
+        return FeeEstimationsGeneric(
+            low = Value.parse(coinType, low.result),
+            economy = Value.parse(coinType, economy.result),
+            normal = Value.parse(coinType, fast.result),
+            high = Value.parse(coinType, fastest.result),
+            lastCheck = System.currentTimeMillis()
         )
-            .run {
-                FeeEstimationsGeneric(
-                    convertBigIntegerToValue(getPrice(PriceLevelSpeed.SAFE_LOW)),
-                    convertBigIntegerToValue(getPrice(PriceLevelSpeed.AVERAGE)),
-                    convertBigIntegerToValue(getPrice(PriceLevelSpeed.FAST)),
-                    convertBigIntegerToValue(getPrice(PriceLevelSpeed.FASTEST)),
-                    System.currentTimeMillis()
-                )
-            }
     }
 
     private fun convertBigIntegerToValue(value: BigInteger) = Value.valueOf(coinType, value)
@@ -74,7 +72,7 @@ class EthFeeProvider(testnet: Boolean, private val feeBacking: FeeEstimationsBac
         var priceLevels: List<PriceLevels> = emptyList()
 
         private class PriceLevels {
-            var speed: PriceLevelSpeed = PriceLevelSpeed.UNKNOWN
+            var speed: PriceLevelSpeed = PriceLevelSpeed.SAFE_LOW
 
             @JsonProperty("max_fee_per_gas")
             var maxFeePerGas: BigInteger = BigInteger.ZERO
@@ -87,16 +85,18 @@ class EthFeeProvider(testnet: Boolean, private val feeBacking: FeeEstimationsBac
             baseFeePerGas + priceLevels.first { it.speed == priceLevelSpeed }.maxPriorityFeePerGas
     }
 
-    private enum class PriceLevelSpeed {
+    private enum class PriceLevelSpeed(val block: Int) {
         @JsonProperty("safe_low")
-        SAFE_LOW,
+        SAFE_LOW(15),
+
         @JsonProperty("average")
-        AVERAGE,
+        AVERAGE(6),
+
         @JsonProperty("fast")
-        FAST,
+        FAST(3),
+
         @JsonProperty("fastest")
-        FASTEST,
-        UNKNOWN
+        FASTEST(1),
     }
 
     companion object {

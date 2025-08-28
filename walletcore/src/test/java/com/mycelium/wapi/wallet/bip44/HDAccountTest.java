@@ -55,8 +55,8 @@ public class HDAccountTest {
 
         WalletDB db = Mockito.mock(WalletDB.class);
 
-        WalletManager walletManager = new WalletManager(NetworkParameters.productionNetwork, fakeWapi, fakeWapi,
-                currenciesSettingsMap, db);
+        WalletManager walletManager = new WalletManager(NetworkParameters.productionNetwork, fakeWapi,
+                currenciesSettingsMap);
 
         MasterSeedManager masterSeedManager = new MasterSeedManager(store);
         masterSeedManager.configureBip32MasterSeed(masterSeed, cipher);
