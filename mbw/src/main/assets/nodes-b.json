@@ -167,9 +167,16 @@
       "isEnabled": false
     },
     "giftbox": {
-      "id": "giftbox",
+      "id": "giftbox1",
       "name": "Gift Cards",
       "start-date": "2020-08-09T13:00:00+0300",
+      "end-date": "2031-08-09T13:00:00+0300",
+      "isEnabled": false
+    },
+    "giftcards": {
+      "id": "giftcards",
+      "name": "Gift Cards",
+      "start-date": "2025-03-01T13:00:00+0300",
       "end-date": "2031-08-09T13:00:00+0300",
       "isEnabled": true
     },
@@ -257,13 +264,29 @@
       "end-date": "2023-03-31T12:00:00+0000",
       "isEnabled": true
     },
+
+      "rakebit": {
+       "id": "rakebit",
+       "name": "Rakebit",
+       "start-date": "2024-08-27T00:00:00+0000",
+       "end-date": "2024-09-28T00:00:00+0000",
+       "isEnabled": true
+     },
+    
     "mgb": {
       "id": "mgb",
       "name": "mgb",
       "start-date": "2023-07-19T12:00:00+0000",
       "end-date": "2100-07-19T12:00:00+0000",
       "isEnabled": true
-    }
+    },
+    "mbwexchange": {
+       "id": "mbwexchange",
+       "name": "mbwexchange",
+       "start-date": "2024-08-27T00:00:00+0000",
+       "end-date": "2027-09-28T00:00:00+0000",
+       "isEnabled": false
+     }
   },
   "MediaFlow": {
     "en": {
@@ -287,6 +310,13 @@
           "link": "https://bcgame.top/i-erf4cln4-n/?spin=true",
           "index": 2,
           "parentId": "bcgame",
+          "isEnabled": true
+        },
+        {
+          "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-mf.png",
+          "link": "https://cryptoexchange.mycelium.com/",
+          "index": 2,
+          "parentId": "mbwexchange",
           "isEnabled": true
         }
       ],
@@ -320,6 +350,12 @@
           "link": "https://bcgame.top/i-erf4cln4-n/?spin=true",
           "parentId": "bcgame",
           "isEnabled": false
+        },
+        {
+          "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-banner.jpg",
+          "link": "https://cryptoexchange.mycelium.com/",
+          "parentId": "mbwexchange",
+          "isEnabled": true
         }
       ],
       "banner-bottom-details" : []
@@ -351,44 +387,12 @@
     "en": {
       "pages": [
         {
-          "tabName": "Win Crypto",
-          "tabIndex": 3,
-          "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/1xbit/10801854.png",
-          "link": "https://refpa4979689.top//L?tag=d_3476490m_1732c_&site=3476490&ad=1732&r=promotions/european-tour-2024",
-          "parentId": "1xbit",
-          "isEnabled": true
-        },
-        {
-          "tabName": "Win Crypto",
-          "tabIndex": 4,
-          "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/coinplay/coinplay_4_1080x1854.png",
-          "link": "https://promotioncoinplay.com/L?tag=d_1943701m_57509c_1080x1854&site=1943701&ad=57509",
-          "parentId": "coinplay",
-          "isEnabled": false
-        },
-        {
-          "tabName": "Win Crypto",
-          "tabIndex": 4,
-          "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bcgame/72_Best_crypro_HTML_1080x1854.png",
-          "link": "https://bcgame.top/i-erf4cln4-n/?spin=true",
-          "parentId": "bcgame",
-          "isEnabled": false
-        },
-        {
           "tabName": "Electric Cars",
-          "tabIndex": 2,
+          "tabIndex": 6,
           "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/su7-tab.png",
           "link": "https://su7.mycelium.com/buy-ticket/",
           "parentId": "su7",
           "isEnabled": true
-        },
-        {
-          "tabName": "Gold Bitcoin",
-          "tabIndex": 2,
-          "imageUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/MGB2.jpg",
-          "link": "https://000.mycelium.com/",
-          "parentId": "mgb",
-          "isEnabled": false
         }
       ]
     }
@@ -426,6 +430,14 @@
           "isEnabled": true
         },
         {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
+          "index": 2,
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Earn on Crypto",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/nexo-symbol-light.png",
           "index": 2,
@@ -449,14 +461,6 @@
           "isEnabled": true
         },
         {
-          "name": "CRYPTO CASINO",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bitsler.png",
-          "index": 4,
-          "link": "https://sancellspotershed.com/a6278cc7-fffe-42af-a99e-ed12d276d95f",
-          "parentId": "bitsler",
-          "isEnabled": false
-        },
-        {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
           "index": 5,
@@ -467,17 +471,49 @@
       ],
             "buy-sell-quads": [
         {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Secure Bitcoin Messenger",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/darxxbig2.png",
-          "index": 3,
+          "index": 4,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/su7_1.min.png",
-          "index": 4,
+          "index": 5,
           "link": "https://su7.mycelium.com/buy-ticket/",
           "parentId": "su7",
           "isEnabled": true
@@ -488,7 +524,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     },
@@ -525,6 +561,14 @@
           "isEnabled": true
         },
         {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
+          "index": 2,
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Donate BTC",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/send_btc_to_yt_tg_5.png",
           "index": 2,
@@ -547,6 +591,16 @@
           "parentId": "bitsler",
           "isEnabled": false
         },
+
+                {
+            "name": "Crypto Casino",
+           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/rakebit.png",
+           "index": 2,
+           "link": "https://rake-tracker.com/db8bb4f66",
+           "parentId": "rakebit",
+           "isEnabled": true
+         },
+        
         {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
@@ -558,12 +612,44 @@
       ],
             "buy-sell-quads": [
         {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Secure Bitcoin Messenger",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/darxxbig2.png",
           "index": 3,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
@@ -579,7 +665,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     },
@@ -615,6 +701,14 @@
           "isEnabled": true
         },
         {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
+          "index": 2,
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Earn on Crypto",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/nexo-symbol-light.png",
           "index": 2,
@@ -637,14 +731,7 @@
           "link": "mycelium://action.changelly",
           "isEnabled": true
         },
-        {
-          "name": "CRYPTO CASINO",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bitsler.png",
-          "index": 4,
-          "link": "https://sancellspotershed.com/a6278cc7-fffe-42af-a99e-ed12d276d95f",
-          "parentId": "bitsler",
-          "isEnabled": false
-        },
+    
         {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
@@ -656,12 +743,44 @@
       ],
             "buy-sell-quads": [
         {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Secure Bitcoin Messenger",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/darxxbig2.png",
           "index": 3,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
@@ -677,7 +796,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     },
@@ -712,13 +831,13 @@
           },
           "isEnabled": true
         },
-        {
-          "name": "Earn on Crypto",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/nexo-symbol-light.png",
+            {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
           "index": 2,
-          "link": "https://app.adjust.com/86lkco6?campaign=mycelium_mb_button_earn_q123",
-          "parentId": "nexo",
-          "isEnabled": false
+          "parentId": "giftcards",
+          "isEnabled": true
         },
         {
           "name": "Donate BTC",
@@ -735,14 +854,7 @@
           "link": "mycelium://action.changelly",
           "isEnabled": true
         },
-        {
-          "name": "CRYPTO CASINO",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bitsler.png",
-          "index": 4,
-          "link": "https://sancellspotershed.com/a6278cc7-fffe-42af-a99e-ed12d276d95f",
-          "parentId": "bitsler",
-          "isEnabled": false
-        },
+        
         {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
@@ -752,7 +864,39 @@
           "isEnabled": false
         }
       ],
-            "buy-sell-quads": [
+      "buy-sell-quads": [
+        {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
 
         {
           "name": "Secure Bitcoin Messenger",
@@ -760,7 +904,7 @@
           "index": 3,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
@@ -776,7 +920,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     },
@@ -811,14 +955,15 @@
           },
           "isEnabled": true
         },
-        {
-          "name": "Earn on Crypto",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/nexo-symbol-light.png",
+            {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
           "index": 2,
-          "link": "https://app.adjust.com/86lkco6?campaign=mycelium_mb_button_earn_q123",
-          "parentId": "nexo",
-          "isEnabled": false
+          "parentId": "giftcards",
+          "isEnabled": true
         },
+
         {
           "name": "Donate BTC",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/send_btc_to_yt_tg_5.png",
@@ -835,14 +980,6 @@
           "isEnabled": true
         },
         {
-          "name": "CRYPTO CASINO",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bitsler.png",
-          "index": 4,
-          "link": "https://sancellspotershed.com/a6278cc7-fffe-42af-a99e-ed12d276d95f",
-          "parentId": "bitsler",
-          "isEnabled": false
-        },
-        {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
           "index": 5,
@@ -853,12 +990,44 @@
       ],
             "buy-sell-quads": [
         {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Secure Bitcoin Messenger",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/darxxbig2.png",
           "index": 3,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
@@ -874,7 +1043,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     },
@@ -910,13 +1079,14 @@
           "isEnabled": true
         },
         {
-          "name": "Earn on Crypto",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/nexo-symbol-light.png",
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
           "index": 2,
-          "link": "https://app.adjust.com/86lkco6?campaign=mycelium_mb_button_earn_q123",
-          "parentId": "nexo",
-          "isEnabled": false
+          "parentId": "giftcards",
+          "isEnabled": true
         },
+
         {
           "name": "Donate BTC",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/send_btc_to_yt_tg_5.png",
@@ -932,14 +1102,7 @@
           "link": "mycelium://action.changelly",
           "isEnabled": true
         },
-        {
-          "name": "CRYPTO CASINO",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bitsler.png",
-          "index": 4,
-          "link": "https://sancellspotershed.com/a6278cc7-fffe-42af-a99e-ed12d276d95f",
-          "parentId": "bitsler",
-          "isEnabled": false
-        },
+
         {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
@@ -951,12 +1114,44 @@
       ],
             "buy-sell-quads": [
         {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Secure Bitcoin Messenger",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/darxxbig2.png",
           "index": 3,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
@@ -972,7 +1167,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     },
@@ -1008,6 +1203,14 @@
           "isEnabled": true
         },
         {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/ic_gift_cards@2x.png",
+          "link": "mycelium://action.GIFTBOX",
+          "index": 2,
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
           "name": "Earn on Crypto",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/nexo-symbol-light.png",
           "index": 2,
@@ -1031,14 +1234,6 @@
           "isEnabled": true
         },
         {
-          "name": "CRYPTO CASINO",
-          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/bitsler.png",
-          "index": 4,
-          "link": "https://sancellspotershed.com/a6278cc7-fffe-42af-a99e-ed12d276d95f",
-          "parentId": "bitsler",
-          "isEnabled": false
-        },
-        {
           "name": "Buy Gift Card",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftbox.png",
           "index": 5,
@@ -1047,14 +1242,46 @@
           "isEnabled": false
         }
       ],
-            "buy-sell-quads": [
+      "buy-sell-quads": [
+        {
+          "name": "Trade Crypto",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/crypto-exchange-square.png",
+          "index": 2,
+          "link": "https://cryptoexchange.mycelium.com",
+          "parentId": "mbwexchange",
+          "isEnabled": true
+        },
+        {
+          "name": "Gift Cards",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift.png",
+          "index": 1,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Mastercard",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-mc.png",
+          "index": 3,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
+        {
+          "name": "Virtual Visa",
+          "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/giftcards/gift-visa.png",
+          "index": 2,
+          "link": "mycelium://action.GIFTBOX",
+          "parentId": "giftcards",
+          "isEnabled": true
+        },
         {
           "name": "Secure Bitcoin Messenger",
           "iconUrl": "https://mycelium-wallet.s3.us-east-1.amazonaws.com/business-partners/darxxbig2.png",
           "index": 3,
           "link": "https://darxx.net/",
           "parentId": "darxx",
-          "isEnabled": true
+          "isEnabled": false
         },
         {
           "name": "Free Delivery Worldwide",
@@ -1070,7 +1297,7 @@
           "index": 6,
           "link": "http://000.mycelium.com",
           "parentId": "mgb",
-          "isEnabled": true
+          "isEnabled": false
         }
       ]
     }
@@ -2119,11 +2346,11 @@
       "primary": [
         {
           "url": "https://wapi.mycelium.com",
-          "cert-sha1": "1A:CF:C9:8A:87:00:68:4B:21:54:47:83:E5:36:B9:23:90:EB:39:16"
+          "cert-sha1": "AB:11:C8:05:8D:E3:83:E2:94:68:21:4E:FB:D2:A3:BC:4C:98:0E:59"
         },
         {
           "url": "https://xrnvil3zn6wgtliinli7vrqgvz77osetux7szpe5l63bvqnpikwu7iqd.onion",
-          "cert-sha1": "1A:CF:C9:8A:87:00:68:4B:21:54:47:83:E5:36:B9:23:90:EB:39:16"
+          "cert-sha1": "AB:11:C8:05:8D:E3:83:E2:94:68:21:4E:FB:D2:A3:BC:4C:98:0E:59"
         }
       ]
     },
@@ -2196,7 +2423,7 @@
     "electrumx": {
       "primary": [
         {
-          "url": "tcp-tls://electrumx-btc-3a.mycelium.com:29230"
+          "url": "tcp-tls://electrumx-btc-3a.mycelium.com:29229"
         }
       ],
       "tor" : [
