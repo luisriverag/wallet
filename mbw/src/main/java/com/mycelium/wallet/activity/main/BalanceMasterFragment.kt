@@ -1,6 +1,5 @@
 package com.mycelium.wallet.activity.main
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -90,15 +88,13 @@ class BalanceMasterFragment : Fragment() {
     }
 
     override fun onStart() {
-        val activity: Activity? = activity
         // Set build version
-        (activity!!.findViewById<View>(R.id.tvBuildText) as TextView).text =
-            resources.getString(
+        binding?.tvBuildText?.text = resources.getString(
                 R.string.build_text,
                 BuildConfig.VERSION_NAME
             )
 
-        val mbwManager = MbwManager.getInstance(activity)
+        val mbwManager = MbwManager.getInstance(requireContext())
         if (mbwManager.torMode == ServerEndpointType.Types.ONLY_TOR && mbwManager.torManager != null) {
             binding?.tvTorState?.visibility = View.VISIBLE
             showTorState(mbwManager.torManager.initState)
