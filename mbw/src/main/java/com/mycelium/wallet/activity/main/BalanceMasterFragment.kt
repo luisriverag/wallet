@@ -46,15 +46,16 @@ class BalanceMasterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val fragmentTransaction = fragmentManager!!.beginTransaction()
+        val fragmentTransaction = childFragmentManager.beginTransaction()
         val account = MbwManager.getInstance(this.activity).selectedAccount
-        defineAddressAccountView(fragmentTransaction, account)
-        fragmentTransaction.replace(R.id.phFragmentBalance, BalanceFragment())
-        fragmentTransaction.replace(R.id.phFragmentNotice, NoticeFragment())
-        fragmentTransaction.replace(R.id.phFragmentFioBanner, newInstance(false))
-        fragmentTransaction.replace(R.id.phFragmentBuySell, BuySellFragment())
+        binding?.run {
+            defineAddressAccountView(fragmentTransaction, account)
+            fragmentTransaction.replace(phFragmentBalance.id, BalanceFragment())
+            fragmentTransaction.replace(phFragmentNotice.id, NoticeFragment())
+            fragmentTransaction.replace(phFragmentFioBanner.id, newInstance(false))
+            fragmentTransaction.replace(phFragmentBuySell.id, BuySellFragment())
+        }
         fragmentTransaction.commitAllowingStateLoss()
-
     }
 
     override fun setMenuVisibility(menuVisible: Boolean) {
@@ -69,12 +70,12 @@ class BalanceMasterFragment : Fragment() {
         }
     }
 
-    private fun defineAddressAccountView(
+    private fun BalanceMasterFragmentBinding.defineAddressAccountView(
         fragmentTransaction: FragmentTransaction,
         account: WalletAccount<*>
     ) {
         fragmentTransaction.replace(
-            R.id.phFragmentAddress,
+            phFragmentAddress.id,
             if ((account.coinType === RMCCoin || account.coinType === RMCCoinTest)) RMCAddressFragment() else AddressFragment()
         )
     }
@@ -99,10 +100,10 @@ class BalanceMasterFragment : Fragment() {
 
         val mbwManager = MbwManager.getInstance(activity)
         if (mbwManager.torMode == ServerEndpointType.Types.ONLY_TOR && mbwManager.torManager != null) {
-            binding?.tvTorState?.setVisibility(View.VISIBLE)
+            binding?.tvTorState?.visibility = View.VISIBLE
             showTorState(mbwManager.torManager.initState)
         } else {
-            binding?.tvTorState?.setVisibility(View.GONE)
+            binding?.tvTorState?.visibility = View.GONE
         }
         updateAddressView()
         MbwManager.getEventBus().register(this)
@@ -127,8 +128,8 @@ class BalanceMasterFragment : Fragment() {
 
     private fun updateAddressView() {
         val account = MbwManager.getInstance(this.activity).selectedAccount
-        val fragmentTransaction = fragmentManager!!.beginTransaction()
-        defineAddressAccountView(fragmentTransaction, account)
+        val fragmentTransaction = childFragmentManager.beginTransaction()
+        binding?.defineAddressAccountView(fragmentTransaction, account)
         fragmentTransaction.commitAllowingStateLoss()
     }
 
