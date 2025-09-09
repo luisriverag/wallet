@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="3.20.0.0" versioncode="3200000">
+    <release version="3.20.0.1" versioncode="3200001">
         <change>Fixed outdated miners' fee issue for ETH and ERC20 tokens</change>
         <change>Improved overall app performance</change>
         <change>Bug fixes</change>
