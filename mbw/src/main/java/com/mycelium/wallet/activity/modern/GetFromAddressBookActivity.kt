@@ -35,6 +35,7 @@ package com.mycelium.wallet.activity.modern
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mycelium.wallet.MbwManager
 import com.mycelium.wallet.R
 import com.mycelium.wallet.activity.modern.adapter.TabsAdapter
@@ -52,9 +53,9 @@ class GetFromAddressBookActivity : AppCompatActivity() {
         }.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        binding.pagerTabs.setupWithViewPager(binding.pager)
         val mbwManager = MbwManager.getInstance(this)
         val mTabsAdapter = TabsAdapter(this, mbwManager)
+        binding.pager.adapter = mTabsAdapter
 
         val myAddressesTab =
             binding.pagerTabs.newTab().setText(getResources().getString(R.string.my_accounts))
@@ -68,15 +69,18 @@ class GetFromAddressBookActivity : AppCompatActivity() {
             contactsTab, AddressBookFragment::class.java,
             addressBookBundle(false, true), TAB_CONTACTS
         )
+        TabLayoutMediator(binding.pagerTabs, binding.pager) { tab, position ->
+            tab.text = mTabsAdapter.getPageTitle(position) //"OBJECT ${(position + 1)}"
+        }.attach()
 
         val countContactsEntries = mbwManager.metadataStorage.allAddressLabels.size
 
         if (countContactsEntries > 0) {
             contactsTab.select()
-            binding.pager.setCurrentItem(mTabsAdapter.indexOf(TAB_CONTACTS))
+            binding.pager.currentItem = mTabsAdapter.indexOf(TAB_CONTACTS)
         } else {
             myAddressesTab.select()
-            binding.pager.setCurrentItem(mTabsAdapter.indexOf(TAB_MY_ADDRESSES))
+            binding.pager.currentItem = mTabsAdapter.indexOf(TAB_MY_ADDRESSES)
         }
     }
 
